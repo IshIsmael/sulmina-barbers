@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Booking confirmed</title>
+</head>
+<body style="margin:0; padding:0; background:#ece6d9; font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; color:#1f2a22;">
+
+  <div style="max-width:560px; margin:0 auto; padding:32px 20px;">
+
+    <div style="padding:8px 0 24px; border-bottom:1px solid #ded5c3;">
+      <p style="margin:0 0 4px; font-size:11px; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:#b8873b;">Booking confirmed</p>
+      <h1 style="margin:0; font-family: Georgia, 'Times New Roman', serif; font-size:30px; font-weight:500; letter-spacing:-0.01em; color:#1f2a22; line-height:1.1;">
+        See you soon, <%= firstName %>.
+      </h1>
+    </div>
+
+    <div style="padding:24px; background:#1f2a22; color:#f2ece1; border-radius:10px; margin:24px 0;">
+      <p style="margin:0 0 14px; font-size:11px; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:#b8873b;">Your booking</p>
+      <p style="margin:0 0 8px; font-family: Georgia, 'Times New Roman', serif; font-size:22px; font-weight:500; line-height:1.2; color:#f2ece1;">
+        <%= booking.serviceName %>
+      </p>
+      <p style="margin:0 0 6px; font-size:16px; color:#f2ece1;">
+        <%= dateLong %> · <strong><%= timeLabel %></strong>
+      </p>
+      <p style="margin:0 0 6px; font-size:14px; color:rgba(242,236,225,0.75);">
+        <%= barberName %> · <%= booking.serviceDuration %> min · £<%= booking.servicePrice %>
+      </p>
+    </div>
+
+    <div style="padding:0 0 16px;">
+      <p style="margin:0 0 4px; font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#b8873b;">Where</p>
+      <p style="margin:0; font-size:16px; color:#1f2a22;"><%= shop.address %></p>
+    </div>
+
+    <div style="padding:16px 0; border-top:1px solid #ded5c3;">
+      <p style="margin:0 0 4px; font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#b8873b;">Need to change or cancel?</p>
+      <p style="margin:0 0 4px; font-size:16px; color:#1f2a22;">
+        Call the shop on <a href="tel:<%= shop.phone.replace(/\s+/g, '') %>" style="color:#1f2a22; font-weight:600;"><%= shop.phone %></a>.
+      </p>
+      <p style="margin:0; font-size:14px; color:#4a5a4e;">
+        Please give us as much notice as you can so we can free the slot for someone else.
+      </p>
+    </div>
+
+    <div style="padding:24px 0 0; margin-top:24px; border-top:1px solid #ded5c3; font-size:12px; color:#4a5a4e; line-height:1.6;">
+      <strong style="color:#1f2a22;"><%= shop.name %></strong><br>
+      <%= shop.address %><br>
+      <%= shop.phone %><br><br>
+      <span style="color:#8b8674;">This is an automated confirmation. Please don't reply directly.</span>
+    </div>
+
+  </div>
+</body>
+</html>

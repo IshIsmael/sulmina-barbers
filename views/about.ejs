@@ -1,0 +1,81 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="main">
+  <section class="container">
+    <header class="page-head">
+      <p class="eyebrow">About</p>
+      <h1>The barbershop on 43 High Street.</h1>
+      <p class="page-head__lede">
+        Sulmina is a local Southgate barbershop for haircuts, fades, beard work
+        and the regular tidy-ups that keep you feeling put together.
+      </p>
+    </header>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="story">
+      <div class="story__copy">
+        <span class="eyebrow">The chair</span>
+        <h2>Easy conversation, careful work.</h2>
+        <p>
+          We keep the shop simple: listen first, cut carefully, finish clean.
+          Some people know their exact fade and length before they sit down.
+          Others bring a photo, ask for advice, or just want their usual shape
+          brought back in. Either way, the job starts with understanding what
+          you want to walk out with.
+        </p>
+        <p>
+          The team covers the day-to-day services Southgate clients ask for:
+          haircuts, skin fades, taper fades, beard shaping, children's cuts,
+          seniors' cuts, face masks and the full service with hot towel. Prices
+          are clear before you book, and appointments can be made online.
+        </p>
+        <p>
+          The chair is for regulars, first-timers, kids, dads, students,
+          granddads and anyone stopping in before work or after school. If you
+          are not sure what to ask for, we will talk it through before the
+          clippers come on.
+        </p>
+
+        <ul class="about-points" aria-label="Shop details">
+          <li>
+            <span>Where</span>
+            <strong>43 High Street, Southgate N14</strong>
+          </li>
+          <li>
+            <span>Book</span>
+            <strong>Online appointments or phone bookings</strong>
+          </li>
+          <li>
+            <span>Open</span>
+            <strong>Seven days, with late evenings most days</strong>
+          </li>
+        </ul>
+      </div>
+
+      <div class="story__media">
+        <div class="story__photo">
+          <img
+            src="/images/gallery/02.jpg"
+            alt="A recent fade at Sulmina Barber Shop"
+            loading="lazy"
+            decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--contrast">
+    <div class="container" style="text-align: center;">
+      <p class="eyebrow">Come in</p>
+      <h2 style="max-width: 22ch; margin: 0 auto var(--s-5);">43 High Street, Southgate.</h2>
+      <a class="btn btn--primary btn--lg" href="/book">Book now</a>
+      <p style="margin-top: var(--s-5); color: color-mix(in oklab, var(--paper) 70%, transparent);">
+        or call <a href="<%= shop.phoneHref %>"><%= shop.phone %></a>
+      </p>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

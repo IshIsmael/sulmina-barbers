@@ -1,0 +1,12 @@
+<ul class="step-nav" aria-label="Booking progress">
+  <% step.items.forEach(function(item, i){ %>
+    <li class="step-nav__item is-<%= item.state %>"
+        <% if (item.state === 'current') { %>aria-current="step"<% } %>>
+      <span class="step-nav__num" aria-hidden="true"><%= item.index %></span>
+      <span class="step-nav__label"><%= item.label %></span>
+    </li>
+    <% if (i < step.items.length - 1) { %>
+      <li class="step-nav__sep" aria-hidden="true"></li>
+    <% } %>
+  <% }); %>
+</ul>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ece6d9">
+
+  <title><%= typeof title !== 'undefined' && title ? title : (typeof meta !== 'undefined' ? meta.title : 'Sulmina Barber Shop') %></title>
+  <% if (typeof meta !== 'undefined' && meta.description) { %>
+    <meta name="description" content="<%= meta.description %>">
+  <% } %>
+  <% if (typeof meta !== 'undefined' && meta.canonical) { %>
+    <link rel="canonical" href="<%= meta.canonical %>">
+  <% } %>
+  <% if (typeof meta !== 'undefined' && meta.noindex) { %>
+    <meta name="robots" content="noindex,follow">
+  <% } %>
+
+  <% if (typeof meta !== 'undefined') { %>
+    <meta property="og:site_name" content="<%= meta.siteName %>">
+    <meta property="og:title" content="<%= meta.title %>">
+    <% if (meta.description) { %><meta property="og:description" content="<%= meta.description %>"><% } %>
+    <% if (meta.canonical) { %><meta property="og:url" content="<%= meta.canonical %>"><% } %>
+    <meta property="og:type" content="<%= meta.ogType || 'website' %>">
+    <meta property="og:locale" content="en_GB">
+    <% if (meta.ogImage) { %><meta property="og:image" content="<%= meta.ogImage %>"><% } %>
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= meta.title %>">
+    <% if (meta.description) { %><meta name="twitter:description" content="<%= meta.description %>"><% } %>
+  <% } %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Manrope:wght@400;500;600;700&display=swap">
+
+  <link rel="preload" href="/css/base.css" as="style">
+  <link rel="preload" href="/css/layout.css" as="style">
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/booking.css">
+  <link rel="stylesheet" href="/css/reviews.css">
+  <link rel="stylesheet" href="/css/gallery.css">
+
+  <script src="/js/app.js" defer></script>
+  <script src="/js/booking-time.js" defer></script>
+
+  <% if (typeof loadElfsight !== 'undefined' && loadElfsight) { %>
+    <script src="https://elfsightcdn.com/platform.js" async></script>
+  <% } %>
+
+  <% if (typeof jsonLd !== 'undefined' && jsonLd) { %>
+    <script type="application/ld+json"><%- JSON.stringify(jsonLd) %></script>
+  <% } %>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>

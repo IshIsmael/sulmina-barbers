@@ -1,0 +1,35 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<main id="main">
+  <section class="container container--narrow">
+    <header class="page-head">
+      <p class="eyebrow">Booked</p>
+      <h1>See you soon, <%= booking.customerName.split(' ')[0] %>.</h1>
+      <p class="page-head__lede">
+        A confirmation is on its way to <strong><%= booking.customerEmail %></strong>.
+        If you need to change it, give the shop a ring on
+        <a href="<%= shop.phoneHref %>"><%= shop.phone %></a>.
+      </p>
+    </header>
+  </section>
+
+  <section class="container container--narrow" style="padding-bottom: var(--s-9);">
+    <div class="receipt">
+      <dl>
+        <dt>Service</dt>  <dd><%= booking.serviceName %></dd>
+        <dt>When</dt>     <dd><%= slotDateLong %> · <%= slotLabel %></dd>
+        <dt>Duration</dt> <dd><%= booking.serviceDuration %> min</dd>
+        <dt>Price</dt>    <dd>£<%= booking.servicePrice %></dd>
+        <dt>Barber</dt>   <dd><%= barberName %></dd>
+        <dt>Where</dt>    <dd><%= shop.address %></dd>
+      </dl>
+    </div>
+
+    <div style="margin-top: var(--s-6);">
+      <a class="btn btn--ghost" href="/">← Back home</a>
+    </div>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

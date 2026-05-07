@@ -1,0 +1,64 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="main">
+  <section class="container">
+    <header class="page-head">
+      <p class="eyebrow">Contact</p>
+      <h1>Find the shop.</h1>
+      <p class="page-head__lede">
+        On the High Street in Southgate. A minute from the tube.
+      </p>
+    </header>
+  </section>
+
+  <section class="container" style="padding-bottom: var(--s-9);">
+    <div class="contact-grid">
+
+      <div class="contact-grid__info">
+        <div class="info-row">
+          <p class="eyebrow" style="color: var(--brass);">Address</p>
+          <p class="info-row__value">43 High Street<br>London N14 6LD</p>
+          <a class="link-arrow" href="https://www.google.com/maps?q=Sulmina+Barber+Shop,+43+High+St,+Southgate,+London+N14+6LD" rel="noopener">Open in Maps<span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="info-row">
+          <p class="eyebrow" style="color: var(--brass);">Phone</p>
+          <p class="info-row__value info-row__value--lg">
+            <a href="<%= shop.phoneHref %>" class="u-clean"><%= shop.phone %></a>
+          </p>
+          <a class="link-arrow" href="<%= shop.phoneHref %>">Tap to call<span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="info-row">
+          <p class="eyebrow" style="color: var(--brass);">Hours</p>
+          <ul class="hours-table">
+            <% hours.forEach(function(h){ %>
+              <li class="<%= h.days === todayLabel ? 'is-today' : '' %>">
+                <span><%= h.days %></span>
+                <span><%= h.time %></span>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+
+        <div class="info-row">
+          <p class="eyebrow" style="color: var(--brass);">Follow</p>
+          <p class="info-row__value info-row__value--md"><a href="<%= shop.instagram %>" rel="noopener">Instagram</a></p>
+        </div>
+      </div>
+
+      <div class="contact-grid__map">
+        <iframe
+          title="Sulmina Barber Shop on a map"
+          src="https://maps.google.com/maps?q=Sulmina+Barber+Shop,+43+High+St,+Southgate,+London+N14+6LD&z=17&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen></iframe>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

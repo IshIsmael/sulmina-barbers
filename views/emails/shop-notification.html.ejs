@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New booking</title>
+</head>
+<body style="margin:0; padding:0; background:#ece6d9; font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; color:#1f2a22;">
+
+  <div style="max-width:560px; margin:0 auto; padding:24px 20px;">
+
+    <div style="padding:8px 0 16px;">
+      <p style="margin:0 0 4px; font-size:11px; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:#b8873b;">New booking</p>
+      <h1 style="margin:0; font-family: Georgia, 'Times New Roman', serif; font-size:28px; font-weight:500; letter-spacing:-0.01em; color:#1f2a22; line-height:1.15;">
+        <%= booking.customerName %>
+      </h1>
+    </div>
+
+    <div style="padding:20px; background:#1f2a22; color:#f2ece1; border-radius:10px; margin:0 0 16px;">
+      <p style="margin:0 0 8px; font-family: Georgia, 'Times New Roman', serif; font-size:22px; font-weight:500; line-height:1.2; color:#f2ece1;">
+        <%= booking.serviceName %>
+      </p>
+      <p style="margin:0 0 4px; font-size:17px; color:#f2ece1;">
+        <%= dateLong %> · <strong><%= timeLabel %></strong>
+      </p>
+      <p style="margin:0; font-size:14px; color:rgba(242,236,225,0.75);">
+        <%= barberName %> · <%= booking.serviceDuration %> min · £<%= booking.servicePrice %>
+      </p>
+    </div>
+
+    <table role="presentation" style="width:100%; border-collapse:collapse; margin:0 0 16px;">
+      <tr>
+        <td style="padding:10px 0; border-bottom:1px solid #ded5c3; font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#b8873b; width:90px;">Phone</td>
+        <td style="padding:10px 0; border-bottom:1px solid #ded5c3; font-size:17px; font-weight:600;">
+          <a href="tel:<%= booking.customerPhone.replace(/\s+/g, '') %>" style="color:#1f2a22; text-decoration:none;"><%= booking.customerPhone %></a>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:10px 0; border-bottom:1px solid #ded5c3; font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#b8873b;">Email</td>
+        <td style="padding:10px 0; border-bottom:1px solid #ded5c3; font-size:15px;">
+          <a href="mailto:<%= booking.customerEmail %>" style="color:#1f2a22;"><%= booking.customerEmail %></a>
+        </td>
+      </tr>
+      <% if (booking.notes && booking.notes.trim()) { %>
+      <tr>
+        <td style="padding:10px 0; border-bottom:1px solid #ded5c3; font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#b8873b; vertical-align:top;">Notes</td>
+        <td style="padding:10px 0; border-bottom:1px solid #ded5c3; font-size:15px; color:#1f2a22;">
+          <%= booking.notes %>
+        </td>
+      </tr>
+      <% } %>
+    </table>
+
+    <p style="margin:0; font-size:12px; color:#4a5a4e;">
+      Booked <%= new Date(booking.createdAt).toLocaleString('en-GB', { timeZone: shop.timezone }) %>
+    </p>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="main">
+
+  <section class="hero">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <span class="eyebrow">43 High Street, Southgate</span>
+        <h1 class="hero__title">Sulmina Barber Shop</h1>
+        <p class="hero__lede">
+          Clean haircuts, skin fades and beard work from the Sulmina team.
+          Book online or call ahead.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="/book">Book now</a>
+          <a class="btn btn--ghost btn--lg" href="/services">View prices</a>
+        </div>
+        <div class="hero__meta">
+          <div class="hero__meta-item">
+            <strong>Open today</strong>
+            <span><%= todayHours ? todayHours : '—' %></span>
+          </div>
+          <div class="hero__meta-item">
+            <strong>Call</strong>
+            <a class="u-clean" href="<%= shop.phoneHref %>"><%= shop.phone %></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__media">
+        <div class="hero__image-wrap">
+          <img
+            class="hero__image"
+            src="/images/gallery/01.jpg"
+            alt="Finished fade and beard at Sulmina Barber Shop"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section section--contrast" aria-labelledby="highlights-heading">
+    <div class="highlights__head">
+      <span class="eyebrow">Most booked</span>
+      <h2 id="highlights-heading">Popular services.</h2>
+    </div>
+
+    <ul class="menu-list">
+      <% highlights.forEach(function(s){ %>
+        <li>
+          <a class="menu-row" href="/book/time?service=<%= s.slug %>">
+            <h3 class="menu-row__name"><%= s.name %></h3>
+            <p class="menu-row__desc"><%= s.description %></p>
+            <span class="menu-row__price">£<%= s.price %></span>
+          </a>
+        </li>
+      <% }); %>
+    </ul>
+
+    <div class="highlights__foot">
+      <a class="link-arrow" href="/services">See full menu <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+
+  <section class="section" aria-labelledby="story-heading">
+    <div class="story">
+      <div class="story__copy">
+        <span class="eyebrow">The shop</span>
+        <h2 id="story-heading">A Southgate chair with regulars behind it.</h2>
+        <p>
+          We are on 43 High Street, Southgate, looking after the everyday cuts
+          people actually come back for: clean trims, skin fades, beard line-ups,
+          kids' cuts and full-service grooming when you want everything sorted
+          in one visit.
+        </p>
+        <p>
+          The shop keeps things direct. Tell us how you wear your hair, show us
+          a photo, or talk it through in the chair. You will see the price before
+          you book, and we are open every day of the week.
+        </p>
+        <p style="margin-top: var(--s-6)">
+          <a class="link-arrow" href="/about">More about Sulmina <span aria-hidden="true">→</span></a>
+        </p>
+      </div>
+
+      <div class="story__media">
+        <div class="story__photo">
+          <img
+            src="/images/gallery/03.jpg"
+            alt="Recent haircut at Sulmina Barber Shop"
+            loading="lazy"
+            decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================================== REVIEWS -->
+  <section class="section reviews" aria-labelledby="reviews-heading">
+    <div class="container">
+      <header class="reviews__head">
+        <p class="eyebrow">What people say</p>
+        <h2 id="reviews-heading">From the chair.</h2>
+      </header>
+
+      <!--
+        Elfsight Google Reviews mount.
+        - The platform script is loaded in head.ejs (home page only).
+        - `data-elfsight-app-lazy` defers widget render until visible.
+        - The skeleton inside the mount is Elfsight's fallback: when the
+          widget renders, it overwrites the div's contents. If the script
+          fails to load (or is blocked by an ad-blocker), the skeleton
+          remains — honest failure state.
+      -->
+      <div class="reviews__frame">
+        <div class="elfsight-app-044748cb-0e56-4343-bd8c-c40f63168cc4" data-elfsight-app-lazy>
+          <div class="reviews__skeleton" aria-hidden="true">
+            <span>Loading reviews from Google…</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section section--contrast" aria-label="Contact information">
+    <div class="contact-strip">
+
+      <div class="contact-item">
+        <span class="contact-item__label">Call</span>
+        <p class="contact-item__value contact-item__value--lg">
+          <a href="<%= shop.phoneHref %>" class="u-clean"><%= shop.phone %></a>
+        </p>
+        <a class="link-arrow" href="<%= shop.phoneHref %>">Tap to call <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="contact-item">
+        <span class="contact-item__label">Visit</span>
+        <p class="contact-item__value contact-item__value--md">
+          43 High Street<br>
+          London N14 6LD
+        </p>
+        <a class="link-arrow" href="https://www.google.com/maps?q=43+High+St,+London+N14+6LD" rel="noopener">Get directions <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="contact-item">
+        <span class="contact-item__label">Hours</span>
+        <ul class="hours-table">
+          <% (typeof hours !== 'undefined' ? hours : []).forEach(function(h){ %>
+            <li class="<%= typeof todayLabel !== 'undefined' && h.days === todayLabel ? 'is-today' : '' %>">
+              <span><%= h.days %></span>
+              <span><%= h.time %></span>
+            </li>
+          <% }); %>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<%- include('partials/footer') %>

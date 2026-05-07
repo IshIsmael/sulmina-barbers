@@ -1,0 +1,40 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="main">
+  <section class="container">
+    <header class="page-head">
+      <p class="eyebrow">Gallery</p>
+      <h1>Recent work.</h1>
+      <p class="page-head__lede">
+        Finished cuts, fades, beards, and the occasional shot from inside the
+        shop. All photos taken in-house.
+      </p>
+    </header>
+  </section>
+
+  <section class="container" style="padding-bottom: var(--s-9);" aria-label="Gallery">
+    <% if (images && images.length > 0) { %>
+      <div class="gallery-grid">
+        <% images.forEach(function(img, i){ %>
+          <figure class="gallery-tile">
+            <img
+              src="<%= img.src %>"
+              alt="Work at Sulmina Barber Shop — photo <%= i + 1 %>"
+              loading="<%= i < 2 ? 'eager' : 'lazy' %>"
+              decoding="async">
+          </figure>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="placeholder-copy" style="max-width: 56ch;">
+        <strong>Gallery is empty</strong>
+        Drop your photos into <code>public/images/gallery/</code>, named
+        <code>01.jpg</code>, <code>02.jpg</code>, … and they'll appear here
+        in order. Restart the server after adding files.
+      </div>
+    <% } %>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

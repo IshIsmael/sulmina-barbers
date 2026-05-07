@@ -1,0 +1,28 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<main id="main">
+  <section class="container container--narrow">
+    <header class="page-head">
+      <p class="eyebrow">That slot's gone</p>
+      <h1>Someone beat you to it.</h1>
+      <p class="page-head__lede">
+        <% if (barber !== 'any') { %>
+          That barber just got booked for the time you picked.
+        <% } else { %>
+          All three barbers were just taken for that time.
+        <% } %>
+        Pick another — we'll hold the chair as soon as you confirm.
+      </p>
+    </header>
+
+    <div style="margin: var(--s-6) 0 var(--s-9); display: flex; gap: var(--s-3); flex-wrap: wrap;">
+      <a class="btn btn--primary" href="/book/time?service=<%= service.slug %>&barber=<%= barber %><%= dateKey ? '&date=' + dateKey : '' %>">
+        See other times
+      </a>
+      <a class="btn btn--ghost" href="/book">Change service</a>
+    </div>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

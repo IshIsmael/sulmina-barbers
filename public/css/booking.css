@@ -1,0 +1,530 @@
+/* ==========================================================================
+   booking.css — Phase 3A-5 · booking flow UI
+   Mobile-first redesign. Desktop refinements via progressive breakpoints.
+   ========================================================================== */
+
+/* ========================================================================
+   STEP NAV — three pills, equal width on mobile (reads as progress),
+   free-width with separators on desktop.
+   ======================================================================== */
+.step-nav {
+  list-style: none;
+  padding: 0;
+  /* Top margin clears the fixed header (the design doc's "Safe Zone").
+     Without this the pills sit underneath the glass header and become
+     unreachable — the explicit "Navbar Trap" the doc forbids. */
+  margin: calc(var(--header-h) + var(--s-4)) 0 var(--s-5);
+  display: flex;
+  align-items: stretch;
+  gap: var(--s-2);
+  /* Mobile default: three pills split the row equally. */
+}
+/* When a page-head follows the step-nav, drop its own header-clearance
+   padding so the heading doesn't drift halfway down the screen. */
+.step-nav + .page-head {
+  padding-top: var(--s-5);
+}
+.step-nav__sep {
+  display: none;
+}
+.step-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  flex: 1 1 0;
+  min-width: 0;
+  padding: var(--s-3) var(--s-3);
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-mute);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  min-height: 40px;
+}
+.step-nav__num {
+  display: inline-grid;
+  place-items: center;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--rule);
+  color: var(--ink);
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.step-nav__label { overflow: hidden; text-overflow: ellipsis; }
+
+.step-nav__item.is-current { background: var(--brass); border-color: var(--brass); color: var(--ink); }
+.step-nav__item.is-current .step-nav__num { background: var(--ink); color: var(--paper); }
+.step-nav__item.is-done { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.step-nav__item.is-done .step-nav__num { background: var(--brass); color: var(--ink); }
+
+@media (min-width: 640px) {
+  .step-nav {
+    gap: var(--s-2);
+    margin: calc(var(--header-h) + var(--s-5)) 0 var(--s-6);
+  }
+  .step-nav__item {
+    flex: 0 0 auto;
+    padding: var(--s-2) var(--s-4);
+    font-size: 0.82rem;
+    min-height: 40px;
+  }
+  .step-nav__label { overflow: visible; }
+  .step-nav__sep {
+    display: block;
+    flex: 0 0 16px;
+    height: 1px;
+    align-self: center;
+    background: var(--rule);
+  }
+}
+
+/* ========================================================================
+   SERVICE TAG — two-row card on mobile, pill on desktop.
+   ======================================================================== */
+.service-tag {
+  /* Mobile: grounded card, two rows. */
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 4px var(--s-3);
+  align-items: baseline;
+  padding: var(--s-3) var(--s-4);
+  background: color-mix(in oklab, var(--ink) 5%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--s-5);
+  max-width: 100%;
+}
+.service-tag__name {
+  grid-column: 1;
+  grid-row: 1;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+.service-tag__meta {
+  grid-column: 1;
+  grid-row: 2;
+  color: var(--ink-mute);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.service-tag__change {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  padding: var(--s-2) var(--s-3);
+  border-left: 1px solid var(--rule);
+  color: var(--brass);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.service-tag__change:hover { color: var(--brass-hi); text-decoration: none; }
+
+@media (min-width: 640px) {
+  /* Desktop: rounded pill, single row. */
+  .service-tag {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    padding: var(--s-2) var(--s-4);
+    border-radius: 999px;
+    font-size: 0.9rem;
+  }
+  .service-tag__name,
+  .service-tag__meta,
+  .service-tag__change {
+    grid-column: auto; grid-row: auto;
+  }
+  .service-tag__change {
+    margin-left: auto;
+    padding: 0 0 0 var(--s-3);
+    align-self: auto;
+  }
+  .service-tag__meta { font-size: 0.9rem; }
+}
+
+/* ========================================================================
+   TIME GRID container (fragment-swap target)
+   ======================================================================== */
+.time-grid {
+  transition: opacity 180ms ease;
+}
+.time-grid.is-swapping {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ========================================================================
+   BARBER STRIP — segmented control, horizontal scroll.
+   Segmented control reads as one unified control rather than 4 pills.
+   ======================================================================== */
+.barber-strip {
+  position: relative;
+  margin: 0 calc(-1 * var(--s-5)) var(--s-6);
+  padding: 0 var(--s-5);
+}
+@media (min-width: 640px) {
+  .barber-strip { margin-left: 0; margin-right: 0; padding: 0; }
+}
+.barber-strip__inner {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 4px;
+  background: color-mix(in oklab, var(--ink) 5%, transparent);
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  /* Edge fade — invites scroll without shouting */
+  mask-image: linear-gradient(to right,
+    black 0,
+    black calc(100% - 24px),
+    transparent 100%);
+  -webkit-mask-image: linear-gradient(to right,
+    black 0,
+    black calc(100% - 24px),
+    transparent 100%);
+}
+@media (min-width: 640px) {
+  .barber-strip__inner {
+    width: fit-content;
+    max-width: 100%;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+}
+.barber-strip__inner::-webkit-scrollbar { display: none; }
+
+.barber-tab {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  padding: var(--s-3) var(--s-4);
+  min-height: 40px;
+  border-radius: 999px;
+  background: transparent;
+  text-decoration: none;
+  color: var(--ink-mute);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 160ms ease, color 160ms ease, transform 100ms ease;
+}
+.barber-tab:hover {
+  color: var(--ink);
+  text-decoration: none;
+}
+.barber-tab:active { transform: scale(0.97); }
+.barber-tab.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  /* Lifted feel — brass glow on the active tab */
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--ink) 15%, transparent);
+}
+.barber-tab.is-active:hover { color: var(--paper); }
+
+/* ========================================================================
+   WEEK NAV BAR — above the date strip. Chevrons + range title.
+   ======================================================================== */
+.week-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  margin: 0 0 var(--s-4);
+  padding: var(--s-2) 0;
+}
+.week-nav__title {
+  flex: 1 1 auto;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  min-width: 0;
+  padding: 0 var(--s-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.week-nav__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-3);
+  min-height: 40px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease, transform 100ms ease;
+}
+.week-nav__btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  text-decoration: none;
+}
+.week-nav__btn:active { transform: scale(0.97); }
+.week-nav__btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.week-nav__btn-label {
+  display: none; /* Hidden on mobile, shown on ≥480px */
+}
+.week-nav__btn.is-disabled {
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+@media (min-width: 480px) {
+  .week-nav__btn-label { display: inline; }
+}
+@media (min-width: 720px) {
+  .week-nav__title { font-size: 1.2rem; }
+  .week-nav__btn { padding: var(--s-2) var(--s-4); }
+}
+
+/* ========================================================================
+   DATE STRIP — 7 pills, full-width on mobile, no inline chevrons.
+   At very narrow widths the strip scrolls horizontally (defensive).
+   ======================================================================== */
+.date-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--s-2);
+  margin: 0 0 var(--s-7);
+}
+/* At <360px (old Androids / iPhone SE 1st gen) the 7-pill grid can still feel
+   cramped. Defensive: let the strip scroll-x so pills keep minimum width.    */
+@media (max-width: 359px) {
+  .date-strip {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .date-strip::-webkit-scrollbar { display: none; }
+  .date-pill { flex: 0 0 56px; scroll-snap-align: start; }
+}
+
+.date-pill {
+  padding: var(--s-3) var(--s-1);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-md);
+  text-align: center;
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 64px;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease, transform 100ms ease;
+  min-width: 0;
+}
+.date-pill:hover {
+  border-color: var(--ink);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+.date-pill.is-selected {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+  transform: none;
+}
+.date-pill.is-selected:hover { color: var(--paper); }
+
+.date-pill__weekday {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  line-height: 1;
+}
+.date-pill.is-selected .date-pill__weekday { color: var(--brass); }
+
+.date-pill__day {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.35rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Today indicator — small, understated dot */
+.date-pill.is-today::after {
+  content: "";
+  display: block;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--brass);
+  margin-top: 2px;
+}
+.date-pill.is-today.is-selected::after { background: var(--paper); }
+
+@media (min-width: 480px) {
+  .date-pill { min-height: 72px; padding: var(--s-3) var(--s-2); }
+  .date-pill__weekday { font-size: 0.62rem; letter-spacing: 0.16em; }
+  .date-pill__day { font-size: 1.5rem; }
+}
+@media (min-width: 720px) {
+  .date-pill { min-height: 80px; padding: var(--s-4) var(--s-2); gap: 4px; }
+  .date-pill__weekday { font-size: 0.68rem; }
+  .date-pill__day { font-size: 1.75rem; }
+  .date-pill.is-today::after { width: 5px; height: 5px; margin-top: 3px; }
+}
+
+/* ========================================================================
+   SLOTS REGION
+   ======================================================================== */
+.slots-region {
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+.slots-head {
+  font-size: clamp(1.35rem, 1.5vw + 0.75rem, 1.75rem);
+  margin: 0 0 var(--s-5);
+  font-weight: 500;
+  outline: none;
+}
+
+.slots-section { margin: 0 0 var(--s-7); }
+.slots-section:last-child { margin-bottom: 0; }
+
+.slots-section__label {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin: 0 0 var(--s-4);
+  padding-bottom: var(--s-2);
+  border-bottom: 1px solid var(--rule);
+  width: 100%;
+}
+
+/* ========================================================================
+   SLOT TILES — bigger tap targets, more breathing room
+   ======================================================================== */
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  gap: var(--s-2);
+}
+@media (min-width: 480px) {
+  .slot-grid { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); }
+}
+@media (min-width: 720px) {
+  .slot-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--s-3); }
+}
+
+.slot {
+  display: grid;
+  place-items: center;
+  min-height: 56px;
+  padding: var(--s-3);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease, transform 100ms ease;
+  position: relative;
+  user-select: none;
+}
+.slot:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+.slot:active { transform: translateY(0); }
+
+.slot.is-busy {
+  background: transparent;
+  color: var(--ink-mute);
+  border-style: dashed;
+  border-color: color-mix(in oklab, var(--ink) 22%, transparent);
+  cursor: not-allowed;
+  opacity: 0.55;
+  min-height: 56px;
+  flex-direction: column;
+  gap: 2px;
+  pointer-events: none;
+}
+.slot.is-busy:hover { background: transparent; color: var(--ink-mute); transform: none; }
+.slot__busy {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* ========================================================================
+   EMPTY STATE
+   ======================================================================== */
+.slots-empty {
+  padding: var(--s-6);
+  border: 1px dashed var(--rule);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--ink) 3%, transparent);
+}
+.slots-empty__title {
+  margin: 0 0 var(--s-2);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.slots-empty__body {
+  margin: 0;
+  color: var(--ink-mute);
+  font-size: 0.95rem;
+  max-width: 48ch;
+}
+.link-arrow--inline {
+  display: inline;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--brass);
+  font-weight: 600;
+}

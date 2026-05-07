@@ -1,0 +1,28 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<main id="main">
+  <section class="container">
+    <%- include('_step-nav', { step }) %>
+    <header class="page-head">
+      <p class="eyebrow">Book now</p>
+      <h1>Choose your service.</h1>
+    </header>
+  </section>
+
+  <section class="container" style="padding-bottom: var(--s-9);">
+    <ul class="menu-list">
+      <% services.forEach(function(s){ %>
+        <li>
+          <a class="menu-row" href="/book/time?service=<%= s.slug %>">
+            <h3 class="menu-row__name"><%= s.name %></h3>
+            <p class="menu-row__desc"><%= s.description %> <small style="color:var(--ink-mute);">· <%= s.durationMinutes %> min</small></p>
+            <span class="menu-row__price">£<%= s.price %></span>
+          </a>
+        </li>
+      <% }); %>
+    </ul>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

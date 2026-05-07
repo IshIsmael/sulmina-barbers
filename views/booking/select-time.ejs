@@ -1,0 +1,29 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<main id="main">
+  <section class="container">
+    <%- include('_step-nav', { step }) %>
+
+    <header class="page-head">
+      <div class="service-tag">
+        <span class="service-tag__name"><%= service.name %></span>
+        <span class="service-tag__meta"><%= service.durationMinutes %> min · £<%= service.price %></span>
+        <a class="service-tag__change" href="/book">Change</a>
+      </div>
+      <h1>Pick a time.</h1>
+      <p class="page-head__lede">All slots are live — once it's gone, it's gone.</p>
+    </header>
+  </section>
+
+  <section class="container" style="padding-bottom: var(--s-9);">
+    <%- include('_time-grid', {
+      service, strip, weekStart, weekRangeLabel,
+      prevWeekStart, nextWeekStart,
+      dateKey, dateLong, groups, totalSlotCount,
+      barberTabs, barberFilter, barberFilterParam, shop
+    }) %>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

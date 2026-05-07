@@ -1,0 +1,21 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="main">
+  <section class="container container--narrow">
+    <header class="page-head">
+      <p class="eyebrow">500</p>
+      <h1>Something broke on our end.</h1>
+      <p class="page-head__lede">
+        Give it a moment and try again, or call the shop on
+        <a href="<%= shop.phoneHref %>"><%= shop.phone %></a>.
+      </p>
+    </header>
+
+    <div style="margin: var(--s-6) 0 var(--s-9);">
+      <a class="btn btn--ghost" href="/">← Go home</a>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,27 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main>
+  <section class="container container--narrow">
+    <header class="page-head">
+      <p class="eyebrow">Booking</p>
+      <h1>Online booking, landing soon.</h1>
+      <p class="page-head__lede">
+        We're rebuilding the booking flow. Until it's ready, give the
+        shop a ring and we'll sort you out.
+      </p>
+    </header>
+
+    <div style="display: grid; gap: var(--s-5); margin: var(--s-6) 0 var(--s-9);">
+      <a class="btn btn--primary btn--lg" href="<%= shop.phoneHref %>" style="justify-self: start;">
+        Call <%= shop.phone %>
+      </a>
+      <p style="color: var(--ink-mute); margin: 0;">
+        Walk-ins welcome when we can fit you in. Most days it's worth
+        trying.
+      </p>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

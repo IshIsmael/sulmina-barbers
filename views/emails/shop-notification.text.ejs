@@ -1,0 +1,25 @@
+NEW BOOKING
+===========
+
+WHEN
+  <%- dateLong %>
+  <%- timeLabel %>
+  <%- booking.serviceDuration %> min
+
+WHAT
+  <%- booking.serviceName %>  (£<%- booking.servicePrice %>)
+
+WHO
+  <%- booking.customerName %>
+  <%- booking.customerPhone %>
+  <%- booking.customerEmail %>
+
+BARBER
+  <%- barberName %>
+
+<% if (booking.notes && booking.notes.trim()) { -%>
+NOTES
+  <%- booking.notes %>
+
+<% } -%>
+Booked <%- new Date(booking.createdAt).toLocaleString('en-GB', { timeZone: shop.timezone }) %>

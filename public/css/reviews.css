@@ -1,0 +1,74 @@
+/* ==========================================================================
+   reviews.css — home page Google Reviews section
+   Styles the container and a skeleton loader. The Elfsight widget paints
+   its own UI inside the mount div — when it renders, it overwrites the
+   skeleton child.
+   ========================================================================== */
+
+.reviews__head {
+  max-width: var(--container);
+  margin: 0 auto var(--s-7);
+  padding: 0 var(--s-5);
+  text-align: left;
+}
+.reviews__head h2 {
+  margin: 0;
+  max-width: 22ch;
+}
+@media (min-width: 720px) {
+  .reviews__head {
+    padding: 0 var(--s-6);
+  }
+}
+
+/* Reserve vertical space so the layout doesn't jump as Elfsight loads. */
+.reviews__frame {
+  min-height: 360px;
+  padding: 0 var(--s-5);
+}
+@media (min-width: 720px) {
+  .reviews__frame {
+    min-height: 420px;
+    padding: 0 var(--s-6);
+  }
+}
+
+/* Skeleton — sits inside the Elfsight mount div. When Elfsight's script
+   runs, it overwrites the mount's innerHTML, removing this skeleton. If
+   the script never runs (ad-blocked, offline, service down), the skeleton
+   stays visible as an honest fallback. */
+.reviews__skeleton {
+  display: grid;
+  place-items: center;
+  min-height: 360px;
+  padding: var(--s-6);
+  border: 1px dashed var(--rule);
+  border-radius: var(--radius-md);
+  background:
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--ink) 4%, transparent) 0 14px,
+      transparent 14px 28px
+    ),
+    color-mix(in oklab, var(--ink) 3%, transparent);
+  color: var(--ink-mute);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+@media (min-width: 720px) {
+  .reviews__skeleton { min-height: 420px; }
+}
+.reviews__skeleton span {
+  background: var(--paper);
+  padding: var(--s-2) var(--s-4);
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reviews__skeleton {
+    background: color-mix(in oklab, var(--ink) 3%, transparent);
+  }
+}
