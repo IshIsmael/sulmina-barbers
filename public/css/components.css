@@ -111,7 +111,7 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding: calc(var(--header-h) + var(--s-6)) 0 var(--s-7);
+  padding: calc(var(--header-total) + var(--s-6)) 0 var(--s-7);
   background: var(--paper);
 }
 .hero__inner {
@@ -125,7 +125,7 @@
 }
 @media (min-width: 1024px) {
   .hero {
-    padding: calc(var(--header-h) + var(--s-8)) 0 var(--s-9);
+    padding: calc(var(--header-total) + var(--s-8)) 0 var(--s-9);
   }
   .hero__inner {
     grid-template-columns: 1.2fr 0.8fr;
@@ -209,17 +209,17 @@
 
 @media (max-width: 759px) {
   .hero {
-    min-height: 100svh;
+    height: 100svh;
     display: flex;
     align-items: stretch;
-    padding: calc(var(--header-h) + var(--s-3)) 0 var(--s-5);
+    padding: calc(var(--header-total) + var(--s-3)) 0 var(--s-5);
     background:
       linear-gradient(180deg, color-mix(in oklab, var(--paper) 92%, white) 0%, var(--paper) 100%);
     color: var(--ink);
     overflow: hidden;
   }
   .hero__inner {
-    min-height: calc(100svh - var(--header-h) - var(--s-3) - var(--s-5));
+    min-height: calc(100svh - var(--header-total) - var(--s-3) - var(--s-5));
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -787,7 +787,7 @@
 @media (min-width: 1024px) {
   .contact-grid__map {
     position: sticky;
-    top: calc(var(--header-h) + var(--s-5));
+    top: calc(var(--header-total) + var(--s-5));
     aspect-ratio: 3 / 4;
   }
 }

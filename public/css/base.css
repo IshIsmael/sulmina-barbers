@@ -43,6 +43,8 @@
   --container-narrow: 840px;
 
   --header-h: 80px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --header-total: calc(var(--header-h) + var(--safe-top));
 
   /* Motion */
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
@@ -69,7 +71,7 @@ body {
   font-weight: 400;
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
-  min-height: 100dvh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
