@@ -1,0 +1,30 @@
+<%
+  /* Brand mark — the Sulmina storefront from the shop logo: striped
+     awning, scalloped valance, door with scissors, base step. Amber
+     tones are fixed brand colours; the neutral parts inherit the text
+     colour via currentColor so the same partial reads correctly on
+     paper (header) and ink (footer, menu overlay). */
+%>
+<svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  <!-- awning: alternating amber stripes with pointed hems -->
+  <g>
+    <path fill="#e89923" d="M6 6h8v15l-4 5-4-5z"/>
+    <path fill="#f6bf5e" d="M14 6h8v15l-4 5-4-5z"/>
+    <path fill="#e89923" d="M22 6h8v15l-4 5-4-5z"/>
+    <path fill="#f6bf5e" d="M30 6h8v15l-4 5-4-5z"/>
+    <path fill="#e89923" d="M38 6h8v15l-4 5-4-5z"/>
+    <path fill="#f6bf5e" d="M46 6h8v15l-4 5-4-5z"/>
+  </g>
+  <!-- facade posts -->
+  <rect fill="currentColor" x="10" y="28" width="3.5" height="28"/>
+  <rect fill="currentColor" x="50.5" y="28" width="3.5" height="28"/>
+  <!-- door with scissors -->
+  <rect fill="none" stroke="#e89923" stroke-width="3" x="24.5" y="33.5" width="15" height="22.5"/>
+  <g stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none">
+    <path d="M29 50l6.5-10M35.5 50L29 40"/>
+    <circle cx="28.3" cy="51.2" r="1.7"/>
+    <circle cx="36.2" cy="51.2" r="1.7"/>
+  </g>
+  <!-- base step -->
+  <rect fill="#e89923" x="8" y="56" width="48" height="4"/>
+</svg>

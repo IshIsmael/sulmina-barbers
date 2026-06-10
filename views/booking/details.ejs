@@ -6,17 +6,32 @@
     <%- include('_step-nav', { step }) %>
 
     <header class="page-head">
-      <div class="service-tag">
-        <span class="service-tag__name"><%= service.name %></span>
-        <span class="service-tag__meta"><%= slotDateLong %> · <%= slotLabel %></span>
-        <a class="service-tag__change" href="/book/time?service=<%= service.slug %>&barber=<%= barberChosen %>">Change</a>
-      </div>
       <h1>Your details.</h1>
       <p class="page-head__lede">We'll email your confirmation and keep your details on file for this booking only.</p>
     </header>
   </section>
 
   <section class="container container--narrow" style="padding-bottom: var(--s-9);">
+    <div class="booking-summary" aria-label="Your appointment so far">
+      <div class="booking-summary__row">
+        <span>Service</span>
+        <strong><%= service.name %></strong>
+      </div>
+      <div class="booking-summary__row">
+        <span>Duration · price</span>
+        <strong><%= service.durationMinutes %> min · £<%= service.price %></strong>
+      </div>
+      <div class="booking-summary__row">
+        <span>Barber</span>
+        <strong><%= barberLabel %></strong>
+      </div>
+      <div class="booking-summary__row">
+        <span>When</span>
+        <strong><%= slotDateLong %> · <%= slotLabel %></strong>
+      </div>
+      <a class="booking-summary__change" href="/book/time?service=<%= service.slug %>&barber=<%= barberChosen %>">Change time</a>
+    </div>
+
     <form class="form" method="post" action="/book/confirm" novalidate>
       <input type="hidden" name="service" value="<%= service.slug %>">
       <input type="hidden" name="slot"    value="<%= slotIso %>">

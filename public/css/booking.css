@@ -58,6 +58,13 @@
 }
 .step-nav__label { overflow: hidden; text-overflow: ellipsis; }
 
+/* Four steps don't fit as labelled pills on narrow screens — collapse
+   the inactive ones to numbered dots, keep the current label readable. */
+@media (max-width: 479px) {
+  .step-nav__item:not(.is-current) { flex: 0 1 auto; }
+  .step-nav__item:not(.is-current) .step-nav__label { display: none; }
+}
+
 .step-nav__item.is-current { background: var(--brass); border-color: var(--brass); color: var(--ink); }
 .step-nav__item.is-current .step-nav__num { background: var(--ink); color: var(--paper); }
 .step-nav__item.is-done { background: var(--ink); border-color: var(--ink); color: var(--paper); }
@@ -528,3 +535,125 @@
   border-bottom: 1px solid var(--brass);
   font-weight: 600;
 }
+
+/* ========================================================================
+   STEP 1 · service categories
+   ======================================================================== */
+.booking-cat { margin-bottom: var(--s-6); }
+.booking-cat__title {
+  font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+  margin-bottom: var(--s-4);
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--rule);
+  text-transform: lowercase;
+}
+
+/* ========================================================================
+   STEP 2 · barber cards
+   ======================================================================== */
+.barber-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+}
+@media (min-width: 640px) {
+  .barber-cards { grid-template-columns: 1fr 1fr; }
+}
+
+.barber-card {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-4) var(--s-5);
+  min-height: 76px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color var(--transition-med), transform var(--transition-med), background var(--transition-med);
+}
+.barber-card:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+  color: var(--ink);
+  background-size: 0; /* suppress the global link underline */
+}
+
+.barber-card__avatar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background: var(--paper-dim);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+.barber-card--any .barber-card__avatar {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--brass);
+}
+
+.barber-card__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.barber-card__name { font-weight: 600; font-size: 1rem; line-height: 1.2; }
+.barber-card__role { color: var(--ink-mute); font-size: 0.85rem; line-height: 1.3; }
+
+.barber-card__arrow {
+  margin-left: auto;
+  color: var(--brass);
+  font-size: 1.1rem;
+  transition: transform var(--transition-med);
+}
+.barber-card:hover .barber-card__arrow { transform: translateX(4px); }
+
+/* ========================================================================
+   STEP 4 · appointment summary (build-up card)
+   ======================================================================== */
+.booking-summary {
+  margin-bottom: var(--s-6);
+  padding: var(--s-4) var(--s-5);
+  background: var(--paper-dim);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--brass);
+  border-radius: var(--radius-sm);
+}
+.booking-summary__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-2) 0;
+}
+.booking-summary__row + .booking-summary__row {
+  border-top: 1px solid var(--rule);
+}
+.booking-summary__row span {
+  color: var(--ink-mute);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  flex-shrink: 0;
+}
+.booking-summary__row strong {
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.booking-summary__change {
+  display: inline-block;
+  margin-top: var(--s-3);
+  color: var(--brass);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.booking-summary__change:hover { color: var(--brass-hi); }
+
+/* "Jump to next opening" inside the empty-day state */
+.slots-empty__jump { margin-top: var(--s-4); }

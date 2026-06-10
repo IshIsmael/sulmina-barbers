@@ -70,25 +70,30 @@
   .site-header__inner { padding: 0 var(--s-8); }
 }
 
+/* Brand lockup mirrors the shop logo: SULMINA · storefront · BARBERSHOP
+   in heavy condensed caps. Oswald stands in for the logo's typeface. */
 .brand {
   display: inline-flex;
   align-items: center;
   gap: var(--s-2);
   color: var(--ink);
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 1.6rem;
-  letter-spacing: -0.04em;
+  font-family: 'Oswald', var(--font-body);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
   text-decoration: none;
   line-height: 1;
-  text-transform: lowercase;
+  text-transform: uppercase;
 }
 .brand:hover { color: var(--brass); }
-.brand__dot {
-  width: 6px;
-  height: 6px;
-  background: var(--brass);
-  border-radius: 50%;
+.brand__mark {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+/* The full lockup is too wide once the compact Book CTA joins the row. */
+@media (max-width: 479px) {
+  .brand__word--tail { display: none; }
 }
 
 .site-nav {
@@ -123,8 +128,21 @@
 
 @media (max-width: 899px) {
   .site-header .site-nav { display: none; }
-  .site-header .site-header__cta { display: none; }
+  /* Keep the primary action one tap away on mobile (design §6 "frictionless
+     booking") — compact pill between brand and menu toggle. */
+  .site-header .site-header__cta {
+    display: inline-flex;
+    margin-left: auto;
+    margin-right: var(--s-3);
+    padding: var(--s-2) var(--s-4);
+    min-height: 44px;
+    font-size: 0.8rem;
+  }
+  .site-header .menu-toggle { margin-left: 0; }
 }
+/* The drawer has its own Book CTA — hide the header one while it's open
+   so an ink-on-ink button doesn't float over the menu. */
+body.menu-open .site-header__cta { visibility: hidden; }
 
 /* ------------------------------------------------------------------------
    Mobile menu
@@ -300,8 +318,8 @@ body.menu-open .mobile-menu {
   .site-footer { padding-top: var(--s-6); }
 }
 
-.site-footer .brand { color: var(--paper); margin-bottom: var(--s-4); font-size: 2rem; }
-.site-footer .brand__dot { background: var(--brass); width: 8px; height: 8px; }
+.site-footer .brand { margin-bottom: var(--s-4); }
+.site-footer__logo { width: min(100%, 280px); height: auto; }
 
 .site-footer__tagline {
   margin: 0;
