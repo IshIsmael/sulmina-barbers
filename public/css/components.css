@@ -913,3 +913,36 @@
   .marquee__track { animation: none; }
   .hero__cue-line::after { animation: none; }
 }
+
+/* ==========================================================================
+   Mobile design pass — density, thumb reach, tactile feedback
+   ========================================================================== */
+
+/* Hero CTAs become full-width thumb targets on small phones. */
+@media (max-width: 479px) {
+  .hero__actions { width: 100%; }
+  .hero__actions .btn { flex: 1 1 100%; }
+  .hero__inner { padding-bottom: clamp(2.25rem, 7vw, 3rem); }
+}
+
+/* Marquee sits tighter on phones. */
+@media (max-width: 600px) {
+  .marquee { padding: 11px 0; }
+  .marquee__track span { font-size: 1.05rem; padding: 0 18px; gap: 18px; }
+}
+
+/* Press feedback — interactive surfaces respond to touch immediately. */
+.slot:active,
+.date-pill:active,
+.barber-tab:active,
+.barber-card:active,
+.menu-row:active,
+.svc-card:active,
+.week-nav__btn:active {
+  transform: scale(0.985);
+  transition-duration: 0.08s;
+}
+
+/* Larger invisible hit area for small text links. */
+.link-arrow { padding-top: 6px; padding-bottom: 6px; }
+.link-arrow::after { bottom: 2px; }

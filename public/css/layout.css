@@ -136,10 +136,7 @@
 /* Hero pages start with cream header text until the bar gets its glass. */
 .site-header--overlay:not(.is-scrolled) .brand { color: var(--paper); }
 .site-header--overlay:not(.is-scrolled) .site-nav a { color: var(--paper); }
-.site-header--overlay:not(.is-scrolled) .menu-toggle {
-  color: var(--paper);
-  border-color: color-mix(in oklab, var(--paper) 25%, transparent);
-}
+.site-header--overlay:not(.is-scrolled) .menu-toggle { color: var(--paper); }
 
 .site-nav {
   display: none;
@@ -197,6 +194,21 @@
   }
   .site-header .menu-toggle { margin-left: 0; }
 }
+
+/* Compact brand on phones — everything still fits at 320px wide. */
+@media (max-width: 767px) {
+  .brand { gap: var(--s-2); }
+  .brand__mark { width: 28px; height: 28px; }
+  .brand__name { font-size: 1.15rem; }
+  .brand__sub { font-size: 0.46rem; letter-spacing: 0.38em; }
+}
+@media (max-width: 399px) {
+  .site-header .site-header__cta {
+    padding: var(--s-2) var(--s-3);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+}
 /* The drawer has its own Book CTA — hide the header one while it's open
    so an ink-on-ink button doesn't float over the menu. */
 body.menu-open .site-header__cta { visibility: hidden; }
@@ -204,29 +216,38 @@ body.menu-open .site-header__cta { visibility: hidden; }
 /* ------------------------------------------------------------------------
    Mobile menu
    ------------------------------------------------------------------------ */
+/* Morphing burger — three bars that fold into an X when the menu
+   opens. 44px hit area, drawn with currentColor so it adapts to the
+   overlay header (paper) and solid header (ink) automatically. */
 .menu-toggle {
   display: inline-flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  align-items: flex-end;
+  gap: 5px;
   margin-left: auto;
-  width: 48px;
-  height: 48px;
-  background: transparent;
-  border: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
-  border-radius: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
   cursor: pointer;
   color: var(--ink);
   z-index: 1001;
-  transition: color 0.25s var(--ease-out-expo), border-color 0.25s var(--ease-out-expo);
+  transition: color 0.25s var(--ease-out-expo);
 }
-body.menu-open .menu-toggle { color: var(--paper); border-color: color-mix(in oklab, var(--paper) 20%, transparent); }
-
-/* Toggle icon swap — hamburger when closed, X when open. Without this
-   both SVGs paint over each other. */
-.menu-toggle .icon-open  { width: 22px; height: 22px; }
-.menu-toggle .icon-close { display: none; width: 22px; height: 22px; }
-body.menu-open .menu-toggle .icon-open  { display: none; }
-body.menu-open .menu-toggle .icon-close { display: block; }
+.menu-toggle span {
+  display: block;
+  height: 2px;
+  width: 26px;
+  background: currentColor;
+  transition: transform 0.3s var(--ease-out-expo), opacity 0.2s var(--ease-out-expo), width 0.3s var(--ease-out-expo);
+}
+.menu-toggle span:nth-child(2) { width: 18px; }
+body.menu-open .menu-toggle { color: var(--paper); }
+body.menu-open .menu-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+body.menu-open .menu-toggle span:nth-child(2) { opacity: 0; }
+body.menu-open .menu-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); width: 26px; }
 
 /* Menu-open: lift the header above the mobile menu so the close button
    stays reachable, and zero its glass surface so the Ink takeover fills
@@ -290,7 +311,29 @@ body.menu-open .mobile-menu {
   font-weight: 700;
   color: var(--brass);
 }
-.mobile-menu__nav a:hover { color: var(--brass); }
+.mobile-menu__nav a:hover,
+.mobile-menu__nav a.is-active { color: var(--brass); }
+
+/* Staggered entrance — links glide in after the ink sheet lands. */
+.mobile-menu__nav a,
+.mobile-menu__cta,
+.mobile-menu__info {
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo), color 0.25s var(--ease-out-expo);
+}
+body.menu-open .mobile-menu__nav a,
+body.menu-open .mobile-menu__cta,
+body.menu-open .mobile-menu__info {
+  opacity: 1;
+  transform: none;
+}
+body.menu-open .mobile-menu__nav a:nth-child(1) { transition-delay: 0.10s; }
+body.menu-open .mobile-menu__nav a:nth-child(2) { transition-delay: 0.16s; }
+body.menu-open .mobile-menu__nav a:nth-child(3) { transition-delay: 0.22s; }
+body.menu-open .mobile-menu__nav a:nth-child(4) { transition-delay: 0.28s; }
+body.menu-open .mobile-menu__cta  { transition-delay: 0.34s; }
+body.menu-open .mobile-menu__info { transition-delay: 0.40s; }
 
 /* Drawer Book CTA — sits between the nav links and the info block. */
 .mobile-menu__cta {

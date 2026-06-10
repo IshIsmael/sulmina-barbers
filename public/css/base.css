@@ -54,6 +54,12 @@
   --transition-med: 0.4s var(--ease-out-expo);
 }
 
+/* Denser shell on phones — an 80px bar eats too much of a small
+   viewport; 64px keeps the brand legible and buys content room. */
+@media (max-width: 767px) {
+  :root { --header-h: 64px; }
+}
+
 html, body { margin: 0; padding: 0; }
 html {
   -webkit-text-size-adjust: 100%;
