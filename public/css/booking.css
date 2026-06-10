@@ -13,7 +13,7 @@
   /* Top margin clears the fixed header (the design doc's "Safe Zone").
      Without this the pills sit underneath the glass header and become
      unreachable — the explicit "Navbar Trap" the doc forbids. */
-  margin: calc(var(--header-h) + var(--s-4)) 0 var(--s-5);
+  margin: calc(var(--header-total) + var(--s-4)) 0 var(--s-5);
   display: flex;
   align-items: stretch;
   gap: var(--s-2);
@@ -73,7 +73,7 @@
 @media (min-width: 640px) {
   .step-nav {
     gap: var(--s-2);
-    margin: calc(var(--header-h) + var(--s-5)) 0 var(--s-6);
+    margin: calc(var(--header-total) + var(--s-5)) 0 var(--s-6);
   }
   .step-nav__item {
     flex: 0 0 auto;
@@ -413,7 +413,7 @@
    SLOTS REGION
    ======================================================================== */
 .slots-region {
-  scroll-margin-top: calc(var(--header-h) + 16px);
+  scroll-margin-top: calc(var(--header-total) + 16px);
 }
 
 .slots-head {
