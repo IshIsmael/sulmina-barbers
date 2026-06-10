@@ -3,7 +3,7 @@
 const express = require('express');
 const { ObjectId } = require('mongodb');
 
-const { SERVICES, getBySlug } = require('../data/services');
+const { getBySlug, groupByCategory } = require('../data/services');
 const {
   SHOP, BARBERS, BARBER_COUNT, OPENING_HOURS,
   SLOT_GRANULARITY_MINUTES, BOOKING_LOOKAHEAD_DAYS,
@@ -14,6 +14,7 @@ const { listAvailableSlots } = require('../lib/availability');
 const { findByDayRange, insertBookingAtomic, BookingConflictError } = require('../lib/bookings');
 const {
   shopDateKey, parseDateKey, shopTime, shopDateLong,
+  shopWeekdayShort, shopDayNum, shopMonthShort,
   buildDateStrip, groupSlotsByDaypart, formatWeekRange
 } = require('../lib/format');
 const { getDb } = require('../lib/mongo');
@@ -39,16 +40,22 @@ function parseBarberFilter(raw) {
 }
 
 function step(n) {
-  const labels = ['Service', 'Time', 'Details'];
+  const labels = ['Service', 'Barber', 'Time', 'Details'];
   return {
     current: n,
-    total: 3,
+    total: 4,
     items: labels.map((label, i) => ({
       label,
       index: i + 1,
       state: i + 1 < n ? 'done' : (i + 1 === n ? 'current' : 'upcoming')
     }))
   };
+}
+
+function barberLabelFor(barberChosen) {
+  if (barberChosen === 'any') return 'Any available';
+  const b = getBarberById(Number(barberChosen));
+  return b ? b.name : 'Any available';
 }
 
 function clampDateKey(candidate, todayKey) {
@@ -67,6 +74,48 @@ function shiftDateKey(key, days, todayKey) {
   const { year, month, day } = parseDateKey(key);
   const shifted = new Date(Date.UTC(year, month - 1, day + days));
   return clampDateKey(shopDateKey(shifted), todayKey);
+}
+
+/**
+ * First day after `fromKey` (within the booking lookahead) with at least
+ * one free slot for the service/barber. One bookings query covers the
+ * whole window; availability is then computed per day in memory.
+ * Returns { key, label } or null.
+ */
+async function findNextOpenDay(service, barberFilter, fromKey, todayKey, now) {
+  const from = parseDateKey(fromKey);
+  const fromUtc = Date.UTC(from.year, from.month - 1, from.day);
+  const today = parseDateKey(todayKey);
+  const maxUtc = Date.UTC(today.year, today.month - 1, today.day)
+    + BOOKING_LOOKAHEAD_DAYS * 24 * 60 * 60 * 1000;
+  if (fromUtc >= maxUtc) return null;
+
+  const bookings = await findByDayRange(
+    new Date(fromUtc),
+    new Date(maxUtc + 2 * 24 * 60 * 60 * 1000)
+  );
+
+  for (let utc = fromUtc + 24 * 60 * 60 * 1000; utc <= maxUtc; utc += 24 * 60 * 60 * 1000) {
+    const dayAnchor = new Date(utc + 12 * 60 * 60 * 1000);
+    const perBarber = listAvailableSlots({
+      date: dayAnchor, service, bookings,
+      barberCount: BARBER_COUNT,
+      openingHours: OPENING_HOURS,
+      timezone: SHOP.timezone,
+      granularityMinutes: SLOT_GRANULARITY_MINUTES,
+      now
+    });
+    const hasSlot = barberFilter === 'any'
+      ? perBarber.some(b => b.startTimes.length > 0)
+      : perBarber.some(b => b.barberId === barberFilter && b.startTimes.length > 0);
+    if (hasSlot) {
+      return {
+        key: shopDateKey(dayAnchor),
+        label: `${shopWeekdayShort(dayAnchor)} ${shopDayNum(dayAnchor)} ${shopMonthShort(dayAnchor)}`
+      };
+    }
+  }
+  return null;
 }
 
 async function computeTimeView(req) {
@@ -149,6 +198,13 @@ async function computeTimeView(req) {
     }))
   ];
 
+  const totalSlotCount = decorated.filter(d => d.status === 'free').length;
+
+  // Day fully booked → offer a one-tap jump to the next day with space.
+  const nextOpen = totalSlotCount === 0
+    ? await findNextOpenDay(service, barberFilter, dateKey, todayKey, now)
+    : null;
+
   return {
     service, strip, weekStart, weekRangeLabel,
     prevWeekStart: canGoPrev ? prevWeekStart : null,
@@ -156,24 +212,37 @@ async function computeTimeView(req) {
     dateKey,
     dateLong: shopDateLong(dayAnchor),
     groups,
-    totalSlotCount: decorated.filter(d => d.status === 'free').length,
+    totalSlotCount,
+    nextOpen,
     barberTabs, barberFilter,
     barberFilterParam: barberFilter === 'any' ? 'any' : String(barberFilter)
   };
 }
 
-// ---- Step 1 ---------------------------------------------------------------
+// ---- Step 1 · service ------------------------------------------------------
 router.get('/', (req, res) => {
   if (typeof req.query.service === 'string') {
     const svc = getBySlug(req.query.service);
-    if (svc) return res.redirect(`/book/time?service=${encodeURIComponent(svc.slug)}`);
+    if (svc) return res.redirect(`/book/barber?service=${encodeURIComponent(svc.slug)}`);
   }
   const meta = pageMeta('book');
   res.render('booking/select-service', {
-    title: meta.title, meta, services: SERVICES, step: step(1)
+    title: meta.title, meta, groups: groupByCategory(), step: step(1)
   });
 });
 
+// ---- Step 2 · barber -------------------------------------------------------
+router.get('/barber', (req, res) => {
+  const service = getBySlug(req.query.service);
+  if (!service) return res.redirect('/book');
+  const meta = pageMeta('book', { title: 'Choose your barber · Sulmina', noindex: true });
+  res.render('booking/select-barber', {
+    title: meta.title, meta,
+    service, barbers: BARBERS, step: step(2)
+  });
+});
+
+// ---- Step 3 · time ---------------------------------------------------------
 router.get('/time', async (req, res, next) => {
   try {
     const view = await computeTimeView(req);
@@ -185,7 +254,7 @@ router.get('/time', async (req, res, next) => {
     });
     res.render('booking/select-time', {
       title: meta.title, meta,
-      step: step(2), ...view
+      step: step(3), ...view
     });
   } catch (err) { next(err); }
 });
@@ -194,7 +263,7 @@ router.get('/time/slots', async (req, res, next) => {
   try {
     const view = await computeTimeView(req);
     if (!view) return res.status(404).send('');
-    res.render('booking/_time-grid', { step: step(2), ...view });
+    res.render('booking/_time-grid', { step: step(3), ...view });
   } catch (err) { next(err); }
 });
 
@@ -213,9 +282,10 @@ router.get('/details', (req, res) => {
   res.render('booking/details', {
     title: meta.title, meta,
     service, slotIso, barberChosen,
+    barberLabel: barberLabelFor(barberChosen),
     slotLabel: shopTime(slotDate),
     slotDateLong: shopDateLong(slotDate),
-    step: step(3), errors: null,
+    step: step(4), errors: null,
     form: { name: '', email: '', phone: '', notes: '' }
   });
 });
@@ -246,13 +316,15 @@ router.post('/confirm', async (req, res, next) => {
 
     if (Object.keys(errors).length) {
       const meta = pageMeta('book', { title: 'Your details · Sulmina', noindex: true });
+      const barberChosen = barberFilter === 'any' ? 'any' : String(barberFilter);
       return res.status(400).render('booking/details', {
         title: meta.title, meta,
         service, slotIso,
-        barberChosen: barberFilter === 'any' ? 'any' : String(barberFilter),
+        barberChosen,
+        barberLabel: barberLabelFor(barberChosen),
         slotLabel: shopTime(slotDate),
         slotDateLong: shopDateLong(slotDate),
-        step: step(3), errors, form
+        step: step(4), errors, form
       });
     }
 

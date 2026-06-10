@@ -7,21 +7,29 @@
     <header class="page-head">
       <p class="eyebrow">Book now</p>
       <h1>Choose your service.</h1>
+      <p class="page-head__lede">Pick what you're coming in for — the duration sets your slot length.</p>
     </header>
   </section>
 
   <section class="container" style="padding-bottom: var(--s-9);">
-    <ul class="menu-list">
-      <% services.forEach(function(s){ %>
-        <li>
-          <a class="menu-row" href="/book/time?service=<%= s.slug %>">
-            <h3 class="menu-row__name"><%= s.name %></h3>
-            <p class="menu-row__desc"><%= s.description %> <small style="color:var(--ink-mute);">· <%= s.durationMinutes %> min</small></p>
-            <span class="menu-row__price">£<%= s.price %></span>
-          </a>
-        </li>
-      <% }); %>
-    </ul>
+    <% groups.forEach(function(group){ %>
+      <% if (group.items.length) { %>
+        <section class="booking-cat" aria-labelledby="cat-<%= group.id %>">
+          <h2 id="cat-<%= group.id %>" class="booking-cat__title"><%= group.label %></h2>
+          <ul class="menu-list">
+            <% group.items.forEach(function(s){ %>
+              <li>
+                <a class="menu-row" href="/book/barber?service=<%= s.slug %>">
+                  <h3 class="menu-row__name"><%= s.name %></h3>
+                  <p class="menu-row__desc"><%= s.description %> <small style="color:var(--ink-mute);">· <%= s.durationMinutes %> min</small></p>
+                  <span class="menu-row__price">£<%= s.price %></span>
+                </a>
+              </li>
+            <% }); %>
+          </ul>
+        </section>
+      <% } %>
+    <% }); %>
   </section>
 </main>
 

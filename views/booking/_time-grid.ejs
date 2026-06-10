@@ -100,6 +100,14 @@
             Pick another day, or call the shop on <a href="<%= shop.phoneHref %>"><%= shop.phone %></a>.
           <% } %>
         </p>
+        <% if (nextOpen) { %>
+          <a class="btn btn--primary slots-empty__jump"
+             data-tg-swap
+             data-tg-query="date=<%= nextOpen.key %>&weekStart=<%= nextOpen.key %>"
+             href="/book/time?service=<%= service.slug %>&date=<%= nextOpen.key %>&weekStart=<%= nextOpen.key %>&barber=<%= barberFilterParam %>">
+            Jump to <%= nextOpen.label %> <span aria-hidden="true">→</span>
+          </a>
+        <% } %>
       </div>
     <% } else { %>
       <% groups.forEach(function(group){ %>

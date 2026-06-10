@@ -26,7 +26,7 @@ function siteUrl() {
 function pageMeta(key, overrides = {}) {
   const common = {
     siteName: SHOP.name,
-    ogImage: null // set when real photo lands
+    ogImage: siteUrl() + '/images/gallery/01.jpg'
   };
 
   const pages = {
@@ -151,7 +151,8 @@ function buildLocalBusinessJsonLd() {
     },
     openingHoursSpecification: buildOpeningHoursSpec(),
     priceRange: '££',
-    image: null, // filled in when real photo lands
+    image: siteUrl() + '/images/gallery/01.jpg',
+    logo: siteUrl() + '/img/logo.png',
     sameAs: [ SHOP.instagram ]
   };
 }
