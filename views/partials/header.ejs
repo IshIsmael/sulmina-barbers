@@ -1,9 +1,11 @@
-<header class="site-header">
+<header class="site-header <%= currentPath === '/' ? 'site-header--overlay' : 'site-header--solid' %>">
   <div class="site-header__inner">
     <a class="brand u-clean" href="/" aria-label="Sulmina Barbershop — home">
-      <span class="brand__word">Sulmina</span>
       <%- include('logo') %>
-      <span class="brand__word brand__word--tail">Barbershop</span>
+      <span class="brand__text">
+        <span class="brand__name">Sulmina</span>
+        <span class="brand__sub">Barbershop</span>
+      </span>
     </a>
 
     <nav class="site-nav" aria-label="Primary">
@@ -13,7 +15,7 @@
       <a href="/contact"  class="<%= currentPath === '/contact'  ? 'is-active' : '' %>">Contact</a>
     </nav>
 
-    <a class="btn btn--primary site-header__cta" href="/book">Book</a>
+    <a class="btn btn--gold site-header__cta" href="/book">Book</a>
 
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
       <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">

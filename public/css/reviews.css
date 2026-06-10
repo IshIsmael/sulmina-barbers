@@ -72,3 +72,10 @@
     background: color-mix(in oklab, var(--ink) 3%, transparent);
   }
 }
+
+/* Band tint — separates the reviews block from neighbouring paper
+   sections, mirroring the design's alternating surfaces. */
+.reviews {
+  background: var(--paper-dim);
+  border-block: 1px solid var(--rule);
+}

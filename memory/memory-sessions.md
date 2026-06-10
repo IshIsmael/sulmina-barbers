@@ -83,3 +83,33 @@ User supplied the actual logo PNG and the Claude Design handoff bundle.
 **Decisions:** kept light "Ink & Paper" palette (user preference) —
 ported the design's flow, not its dark theme. Kept 7-day week strip
 over the design's 14-day strip (lookahead is 28 days).
+
+## 2026-06-10 (later still) — Full visual redesign pass
+
+User judged the earlier polish "not good" and asked for a proper
+redesign closer to the Claude Design handoff, kept in light mode.
+
+**Did:**
+- New typographic voice: Anton display caps (matches the logo
+  lettering) for h1/h2/prices/date numerals; Manrope body; Fraunces
+  italic accents (hours, quotes). Oswald removed.
+- Home rebuilt to the handoff structure: full-bleed photo hero with
+  outline-stroke second headline line + scroll cue, gold services
+  marquee, story split with gold photo tag + stats row (3 chairs /
+  7 days / 13 services), featured services as gold-accented cards on
+  ink, gallery teaser grid, reviews band (kept Elfsight, light bg —
+  widget assumes light), giant CTA band, contact strip.
+- Shell: transparent-to-glass header (overlay on home, solid
+  elsewhere), stacked brand lockup (mark + SULMINA / BARBERSHOP),
+  gold underline nav states, numbered Anton mobile-menu links,
+  4-column footer with giant ghost SULMINA wordmark.
+- Interior pages got ghost words behind page titles; About bottom
+  band became a CTA band with the gold story tag.
+- Reveal-on-scroll via IntersectionObserver (gated behind html.js so
+  no-JS users see everything; reduced-motion respected, marquee and
+  cue animations disabled there).
+- Services/menu rows: names now bold body face, prices Anton gold.
+
+**Decisions:** kept light Ink & Paper palette and all correct shop
+data; dark sections only as alternating bands. Booking flow untouched
+from earlier today (4 steps), restyled for free via the type system.

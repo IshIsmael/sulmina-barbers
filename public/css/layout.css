@@ -1,5 +1,5 @@
 /* ==========================================================================
-   layout.css — Cinematic Editorial · structural foundations
+   layout.css — structural foundations: shell, nav, footer
    ========================================================================== */
 
 .container {
@@ -38,9 +38,28 @@
 }
 .section--contrast a:not(.btn):hover { color: var(--brass-hi); }
 .section--contrast .eyebrow { color: var(--brass); }
+.section--contrast p { color: color-mix(in oklab, var(--paper) 80%, transparent); }
+
+/* Section header — display title left, muted lede bottom-right. */
+.sec-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--s-5);
+  margin-bottom: clamp(2.25rem, 5vw, 4rem);
+}
+.sec-head h2 { margin: 0; max-width: 14ch; }
+.sec-head > p {
+  max-width: 38ch;
+  margin: 0;
+  color: var(--ink-mute);
+  font-size: 0.95rem;
+}
+.section--contrast .sec-head > p { color: color-mix(in oklab, var(--paper) 60%, transparent); }
 
 /* ------------------------------------------------------------------------
-   Site header: Glassmorphism 2.0
+   Site header — glass bar over content
    ------------------------------------------------------------------------ */
 .site-header {
   position: fixed;
@@ -50,12 +69,24 @@
   z-index: 1000;
   height: var(--header-total);
   padding-top: var(--safe-top);
-  background: color-mix(in oklab, var(--paper) 70%, transparent);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border-bottom: 1px solid color-mix(in oklab, var(--ink) 5%, transparent);
+  background: transparent;
+  border-bottom: 1px solid transparent;
   display: flex;
   align-items: center;
+  transition: background 0.35s var(--ease-out-expo), border-color 0.35s var(--ease-out-expo);
+}
+.site-header.is-scrolled {
+  background: color-mix(in oklab, var(--paper) 78%, transparent);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-bottom-color: color-mix(in oklab, var(--ink) 6%, transparent);
+}
+/* On pages without a dark hero the header needs its surface immediately. */
+.site-header--solid {
+  background: color-mix(in oklab, var(--paper) 78%, transparent);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-bottom-color: color-mix(in oklab, var(--ink) 6%, transparent);
 }
 
 .site-header__inner {
@@ -71,35 +102,48 @@
   .site-header__inner { padding: 0 var(--s-8); }
 }
 
-/* Brand lockup mirrors the shop logo: SULMINA · storefront · BARBERSHOP
-   in heavy condensed caps. Oswald stands in for the logo's typeface. */
+/* Brand — storefront mark + stacked wordmark, like the shop logo. */
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: var(--s-2);
+  gap: var(--s-3);
   color: var(--ink);
-  font-family: 'Oswald', var(--font-body);
-  font-weight: 600;
-  font-size: 1.25rem;
-  letter-spacing: 0.04em;
   text-decoration: none;
   line-height: 1;
-  text-transform: uppercase;
 }
 .brand:hover { color: var(--brass); }
 .brand__mark {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
 }
-/* The full lockup is too wide once the compact Book CTA joins the row. */
-@media (max-width: 479px) {
-  .brand__word--tail { display: none; }
+.brand__text { display: flex; flex-direction: column; gap: 3px; }
+.brand__name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.brand__sub {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.52rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+/* Hero pages start with cream header text until the bar gets its glass. */
+.site-header--overlay:not(.is-scrolled) .brand { color: var(--paper); }
+.site-header--overlay:not(.is-scrolled) .site-nav a { color: var(--paper); }
+.site-header--overlay:not(.is-scrolled) .menu-toggle {
+  color: var(--paper);
+  border-color: color-mix(in oklab, var(--paper) 25%, transparent);
 }
 
 .site-nav {
   display: none;
-  gap: var(--s-7);
+  gap: var(--s-6);
   align-items: center;
 }
 @media (min-width: 900px) {
@@ -108,17 +152,29 @@
 
 .site-nav a {
   color: var(--ink);
-  font-weight: 500;
-  font-size: 0.85rem;
+  font-weight: 600;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.14em;
   text-decoration: none;
   background: none;
-  opacity: 0.6;
-  transition: opacity 0.3s var(--ease-out-expo), color 0.3s var(--ease-out-expo);
+  position: relative;
+  padding: 6px 0;
+  transition: color 0.25s var(--ease-out-expo);
 }
-.site-nav a:hover,
-.site-nav a.is-active { opacity: 1; color: var(--brass); }
+.site-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--brass);
+  transition: width 0.3s var(--ease-out-expo);
+}
+.site-nav a:hover::after,
+.site-nav a.is-active::after { width: 100%; }
+.site-nav a.is-active { color: var(--brass); }
 
 .site-header__cta { margin-left: auto; }
 
@@ -129,8 +185,8 @@
 
 @media (max-width: 899px) {
   .site-header .site-nav { display: none; }
-  /* Keep the primary action one tap away on mobile (design §6 "frictionless
-     booking") — compact pill between brand and menu toggle. */
+  /* Keep the primary action one tap away on mobile — compact pill
+     between brand and menu toggle. */
   .site-header .site-header__cta {
     display: inline-flex;
     margin-left: auto;
@@ -161,6 +217,7 @@ body.menu-open .site-header__cta { visibility: hidden; }
   cursor: pointer;
   color: var(--ink);
   z-index: 1001;
+  transition: color 0.25s var(--ease-out-expo), border-color 0.25s var(--ease-out-expo);
 }
 body.menu-open .menu-toggle { color: var(--paper); border-color: color-mix(in oklab, var(--paper) 20%, transparent); }
 
@@ -173,10 +230,8 @@ body.menu-open .menu-toggle .icon-close { display: block; }
 
 /* Menu-open: lift the header above the mobile menu so the close button
    stays reachable, and zero its glass surface so the Ink takeover fills
-   the whole viewport (per design §3 "total takeover"). The header still
-   reserves its 80px slot at the top of the menu — the brand stays in
-   place, the toggle stays clickable, the menu's solid background
-   shows through where the glass used to be. */
+   the whole viewport. The header still reserves its slot at the top of
+   the menu — the brand stays in place, the toggle stays clickable. */
 body.menu-open .site-header {
   background: transparent;
   backdrop-filter: none;
@@ -212,15 +267,28 @@ body.menu-open .mobile-menu {
   flex-direction: column;
   gap: var(--s-3);
   margin-bottom: var(--s-5);
+  counter-reset: mm;
 }
 .mobile-menu__nav a {
   color: var(--paper);
   font-family: var(--font-display);
-  font-size: clamp(2rem, 11vw, 4rem);
+  font-size: clamp(2.4rem, 12vw, 4.5rem);
   text-decoration: none;
-  line-height: 0.95;
-  text-transform: lowercase;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
   background: none;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-4);
+  counter-increment: mm;
+}
+.mobile-menu__nav a::before {
+  content: "0" counter(mm);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--brass);
 }
 .mobile-menu__nav a:hover { color: var(--brass); }
 
@@ -267,9 +335,9 @@ body.menu-open .mobile-menu {
   display: block;
   color: var(--paper);
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 6vw, 2.25rem);
+  font-size: clamp(1.6rem, 7vw, 2.5rem);
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
   line-height: 1;
   text-decoration: none;
   background: none;
@@ -296,23 +364,29 @@ body.menu-open .mobile-menu {
   background: var(--ink);
   color: var(--paper);
   padding: var(--s-8) 0 0;
-  margin-top: 0; /* Ensures no white gap */
+  margin-top: 0;
   position: relative;
   z-index: 10;
+  overflow: hidden;
 }
 .site-footer__grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--s-5);
+  gap: var(--s-6);
   padding-bottom: var(--s-7);
   align-items: start;
 }
 @media (min-width: 768px) {
-  .site-footer { padding-top: var(--s-8); }
   .site-footer__grid {
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: var(--s-8);
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-7);
     padding-bottom: var(--s-8);
+  }
+}
+@media (min-width: 1024px) {
+  .site-footer__grid {
+    grid-template-columns: 1.5fr 0.8fr 1fr 1.1fr;
+    gap: var(--s-8);
   }
 }
 @media (max-width: 767px) {
@@ -320,14 +394,23 @@ body.menu-open .mobile-menu {
 }
 
 .site-footer .brand { margin-bottom: var(--s-4); }
-.site-footer__logo { width: min(100%, 280px); height: auto; }
+.site-footer__logo { width: min(100%, 300px); height: auto; }
 
 .site-footer__tagline {
   margin: 0;
   color: color-mix(in oklab, var(--paper) 65%, transparent);
   font-size: 0.95rem;
   line-height: 1.5;
-  max-width: 28ch;
+  max-width: 30ch;
+}
+
+.site-footer__head {
+  margin: 0 0 var(--s-4);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--paper) 55%, transparent);
 }
 
 .site-footer__nav {
@@ -350,9 +433,7 @@ body.menu-open .mobile-menu {
 
 .site-footer__social .eyebrow { color: var(--brass); }
 
-/* Link visibility on the ink footer.
-   Without this the global `.link-arrow { color: var(--ink) }` rule
-   paints the Instagram link in ink-on-ink — invisible until hover. */
+/* Link visibility on the ink footer. */
 .site-footer a:not(.btn) {
   color: var(--paper);
   background: none;
@@ -364,6 +445,21 @@ body.menu-open .mobile-menu {
 .site-footer .link-arrow { color: var(--paper); }
 .site-footer .link-arrow:hover { color: var(--brass); }
 .site-footer .link-arrow::after { background: var(--brass); }
+
+/* Giant ghost wordmark — barely-there brand statement above the legal bar. */
+.site-footer__giant {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 19vw, 17rem);
+  line-height: 0.8;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--paper);
+  opacity: 0.04;
+  user-select: none;
+  pointer-events: none;
+  padding-bottom: var(--s-3);
+  white-space: nowrap;
+}
 
 .site-footer__bottom {
   border-top: 1px solid color-mix(in oklab, var(--paper) 8%, transparent);
@@ -386,18 +482,35 @@ body.menu-open .mobile-menu {
 }
 
 /* ------------------------------------------------------------------------
-   Page head
+   Page head — interior page opener with a ghost word behind it
    ------------------------------------------------------------------------ */
 .page-head {
+  position: relative;
   padding: calc(var(--header-total) + var(--s-7)) 0 var(--s-6);
   max-width: 60ch;
 }
-.page-head h1 { margin-bottom: var(--s-4); line-height: 0.95; }
+.page-head h1 { margin-bottom: var(--s-4); }
 .page-head__lede {
   color: var(--ink-soft);
-  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
   opacity: 0.8;
   line-height: 1.6;
+  max-width: 52ch;
+}
+.page-head__ghost {
+  position: absolute;
+  right: -6%;
+  bottom: -10%;
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 24vw, 20rem);
+  line-height: 0.8;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.03;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  z-index: -1;
 }
 @media (max-width: 768px) {
   .page-head { padding: calc(var(--header-total) + var(--s-5)) 0 var(--s-4); }

@@ -3,75 +3,45 @@
 
 <main id="main">
 
+  <!-- =============================================================== HERO -->
   <section class="hero">
-    <div class="hero__inner">
-      <div class="hero__copy">
-        <span class="eyebrow">43 High Street, Southgate</span>
-        <h1 class="hero__title">Sulmina Barber Shop</h1>
+    <div class="hero__bg" aria-hidden="true">
+      <img src="/images/gallery/01.jpg" alt=""
+           width="899" height="1159"
+           loading="eager" decoding="async" fetchpriority="high">
+    </div>
+    <div class="hero__inner container">
+      <p class="eyebrow">43 High Street · Southgate</p>
+      <h1 class="hero__title">Sharp<br><span class="hero__title-line2">by design</span></h1>
+      <div class="hero__sub">
         <p class="hero__lede">
           Clean haircuts, skin fades and beard work from the Sulmina team.
+          <% if (todayHours) { %>Open today <%= todayHours %>.<% } %>
           Book online or call ahead.
         </p>
         <div class="hero__actions">
-          <a class="btn btn--primary btn--lg" href="/book">Book now</a>
+          <a class="btn btn--gold btn--lg" href="/book">Book a chair <span class="arr" aria-hidden="true">→</span></a>
           <a class="btn btn--ghost btn--lg" href="/services">View prices</a>
         </div>
-        <div class="hero__meta">
-          <div class="hero__meta-item">
-            <strong>Open today</strong>
-            <span><%= todayHours ? todayHours : '—' %></span>
-          </div>
-          <div class="hero__meta-item">
-            <strong>Call</strong>
-            <a class="u-clean" href="<%= shop.phoneHref %>"><%= shop.phone %></a>
-          </div>
-        </div>
-      </div>
-
-      <div class="hero__media">
-        <div class="hero__image-wrap">
-          <img
-            class="hero__image"
-            src="/images/gallery/01.jpg"
-            alt="Finished fade and beard at Sulmina Barber Shop"
-            loading="eager"
-            decoding="async"
-            fetchpriority="high">
-        </div>
       </div>
     </div>
+    <div class="hero__cue" aria-hidden="true"><span>Scroll</span><span class="hero__cue-line"></span></div>
   </section>
 
-
-  <section class="section section--contrast" aria-labelledby="highlights-heading">
-    <div class="highlights__head">
-      <span class="eyebrow">Most booked</span>
-      <h2 id="highlights-heading">Popular services.</h2>
+  <!-- ============================================================ MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>Skin fades</span><span>Beard work</span><span>Hot towels</span><span>Kids' cuts</span><span>Walk-ins welcome</span><span>Seven days a week</span>
+      <span>Skin fades</span><span>Beard work</span><span>Hot towels</span><span>Kids' cuts</span><span>Walk-ins welcome</span><span>Seven days a week</span>
     </div>
+  </div>
 
-    <ul class="menu-list">
-      <% highlights.forEach(function(s){ %>
-        <li>
-          <a class="menu-row" href="/book/barber?service=<%= s.slug %>">
-            <h3 class="menu-row__name"><%= s.name %></h3>
-            <p class="menu-row__desc"><%= s.description %></p>
-            <span class="menu-row__price">£<%= s.price %></span>
-          </a>
-        </li>
-      <% }); %>
-    </ul>
-
-    <div class="highlights__foot">
-      <a class="link-arrow" href="/services">See full menu <span aria-hidden="true">→</span></a>
-    </div>
-  </section>
-
-
+  <!-- ============================================================== STORY -->
   <section class="section" aria-labelledby="story-heading">
     <div class="story">
-      <div class="story__copy">
+      <div class="story__copy reveal">
         <span class="eyebrow">The shop</span>
-        <h2 id="story-heading">A Southgate chair with regulars behind it.</h2>
+        <h2 id="story-heading">Not a queue. A proper sit-down.</h2>
         <p>
           We are on 43 High Street, Southgate, looking after the everyday cuts
           people actually come back for: clean trims, skin fades, beard line-ups,
@@ -79,35 +49,101 @@
           in one visit.
         </p>
         <p>
-          The shop keeps things direct. Tell us how you wear your hair, show us
-          a photo, or talk it through in the chair. You will see the price before
-          you book, and we are open every day of the week.
+          Tell us how you wear your hair, show us a photo, or talk it through
+          in the chair. You will see the price before you book, and we are open
+          every day of the week.
         </p>
-        <p style="margin-top: var(--s-6)">
+        <div class="stats">
+          <div class="stat"><div class="stat__n tnum">3</div><div class="stat__l">Chairs, three barbers</div></div>
+          <div class="stat"><div class="stat__n tnum">7</div><div class="stat__l">Days a week</div></div>
+          <div class="stat"><div class="stat__n tnum">13</div><div class="stat__l">Services on the menu</div></div>
+        </div>
+        <p style="margin: var(--s-6) 0 0;">
           <a class="link-arrow" href="/about">More about Sulmina <span aria-hidden="true">→</span></a>
         </p>
       </div>
 
-      <div class="story__media">
+      <div class="story__media reveal d1">
         <div class="story__photo">
           <img
             src="/images/gallery/03.jpg"
             alt="Recent haircut at Sulmina Barber Shop"
+            width="805" height="1148"
             loading="lazy"
             decoding="async">
         </div>
+        <span class="story__tag">43 High Street</span>
       </div>
     </div>
   </section>
 
+  <!-- ================================================== FEATURED SERVICES -->
+  <section class="section section--contrast" aria-labelledby="highlights-heading">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div>
+          <span class="eyebrow">Most booked</span>
+          <h2 id="highlights-heading">Built for<br>every chair</h2>
+        </div>
+        <p>From a quick beard tidy to the full hour-long works. Clear prices, honest timings, no surprises.</p>
+      </div>
 
-  <!-- =============================================================== REVIEWS -->
+      <div class="svc-grid">
+        <% highlights.forEach(function(s, i){ %>
+          <a class="svc-card reveal <%= i % 2 ? 'd1' : '' %>" href="/book/barber?service=<%= s.slug %>">
+            <div class="svc-card__top">
+              <div>
+                <h3 class="svc-card__name"><%= s.name %></h3>
+                <p class="svc-card__who"><%= s.description %></p>
+              </div>
+              <div class="svc-card__price">£<%= s.price %></div>
+            </div>
+            <div class="svc-card__meta tnum"><%= s.durationMinutes %> min</div>
+            <div class="svc-card__foot">
+              <span class="svc-card__book">Book now <span class="arr" aria-hidden="true">→</span></span>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+
+      <div style="text-align: center; margin-top: var(--s-7);" class="reveal">
+        <a class="btn btn--gold btn--lg" href="/services">See all services <span class="arr" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== GALLERY TEASER -->
+  <section class="section" aria-labelledby="work-heading">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div>
+          <span class="eyebrow">The work</span>
+          <h2 id="work-heading">Fresh off<br>the chair</h2>
+        </div>
+        <p>A look at what leaves the shop. See the full gallery for more.</p>
+      </div>
+      <div class="home-gallery reveal d1">
+        <div class="home-gallery__item"><img src="/images/gallery/04.jpg" alt="Recent cut at Sulmina" width="812" height="1032" loading="lazy" decoding="async"></div>
+        <div class="home-gallery__item"><img src="/images/gallery/05.jpg" alt="Recent fade at Sulmina" width="829" height="1079" loading="lazy" decoding="async"></div>
+        <div class="home-gallery__item"><img src="/images/gallery/06.jpg" alt="Beard work at Sulmina" width="787" height="1173" loading="lazy" decoding="async"></div>
+        <div class="home-gallery__item"><img src="/images/gallery/08.jpg" alt="Finished haircut at Sulmina" width="830" height="1133" loading="lazy" decoding="async"></div>
+      </div>
+      <div style="text-align: center; margin-top: var(--s-6);" class="reveal">
+        <a class="btn btn--ghost btn--lg" href="/gallery">Open the gallery <span class="arr" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ REVIEWS -->
   <section class="section reviews" aria-labelledby="reviews-heading">
     <div class="container">
-      <header class="reviews__head">
-        <p class="eyebrow">What people say</p>
-        <h2 id="reviews-heading">From the chair.</h2>
-      </header>
+      <div class="sec-head reveal">
+        <div>
+          <span class="eyebrow">Why people stay</span>
+          <h2 id="reviews-heading">From the chair</h2>
+        </div>
+        <p>Live reviews straight from Google — unedited, from people who sat in the chair.</p>
+      </div>
 
       <!--
         Elfsight Google Reviews mount.
@@ -128,11 +164,21 @@
     </div>
   </section>
 
+  <!-- ================================================================ CTA -->
+  <section class="section cta-band" aria-label="Book a chair">
+    <div class="container reveal">
+      <span class="eyebrow eyebrow--bare">Your chair is waiting</span>
+      <h2>Book it<br>your way</h2>
+      <p>Choose your barber, choose your time. We hold the chair to the minute — no overlaps, no double bookings, no fuss.</p>
+      <a class="btn btn--primary btn--lg" href="/book">Book a chair <span class="arr" aria-hidden="true">→</span></a>
+    </div>
+  </section>
 
+  <!-- ======================================================= CONTACT STRIP -->
   <section class="section section--contrast" aria-label="Contact information">
     <div class="contact-strip">
 
-      <div class="contact-item">
+      <div class="contact-item reveal">
         <span class="contact-item__label">Call</span>
         <p class="contact-item__value contact-item__value--lg">
           <a href="<%= shop.phoneHref %>" class="u-clean"><%= shop.phone %></a>
@@ -140,7 +186,7 @@
         <a class="link-arrow" href="<%= shop.phoneHref %>">Tap to call <span aria-hidden="true">→</span></a>
       </div>
 
-      <div class="contact-item">
+      <div class="contact-item reveal d1">
         <span class="contact-item__label">Visit</span>
         <p class="contact-item__value contact-item__value--md">
           43 High Street<br>
@@ -149,7 +195,7 @@
         <a class="link-arrow" href="https://www.google.com/maps?q=43+High+St,+London+N14+6LD" rel="noopener">Get directions <span aria-hidden="true">→</span></a>
       </div>
 
-      <div class="contact-item">
+      <div class="contact-item reveal d2">
         <span class="contact-item__label">Hours</span>
         <ul class="hours-table">
           <% (typeof hours !== 'undefined' ? hours : []).forEach(function(h){ %>
