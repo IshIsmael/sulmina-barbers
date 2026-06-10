@@ -84,11 +84,10 @@
   text-transform: lowercase;
 }
 .brand:hover { color: var(--brass); }
-.brand__dot {
-  width: 6px;
-  height: 6px;
-  background: var(--brass);
-  border-radius: 50%;
+.brand__mark {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
 }
 
 .site-nav {
@@ -123,8 +122,21 @@
 
 @media (max-width: 899px) {
   .site-header .site-nav { display: none; }
-  .site-header .site-header__cta { display: none; }
+  /* Keep the primary action one tap away on mobile (design §6 "frictionless
+     booking") — compact pill between brand and menu toggle. */
+  .site-header .site-header__cta {
+    display: inline-flex;
+    margin-left: auto;
+    margin-right: var(--s-3);
+    padding: var(--s-2) var(--s-4);
+    min-height: 44px;
+    font-size: 0.8rem;
+  }
+  .site-header .menu-toggle { margin-left: 0; }
 }
+/* The drawer has its own Book CTA — hide the header one while it's open
+   so an ink-on-ink button doesn't float over the menu. */
+body.menu-open .site-header__cta { visibility: hidden; }
 
 /* ------------------------------------------------------------------------
    Mobile menu
@@ -301,7 +313,7 @@ body.menu-open .mobile-menu {
 }
 
 .site-footer .brand { color: var(--paper); margin-bottom: var(--s-4); font-size: 2rem; }
-.site-footer .brand__dot { background: var(--brass); width: 8px; height: 8px; }
+.site-footer .brand__mark { width: 30px; height: 30px; }
 
 .site-footer__tagline {
   margin: 0;
