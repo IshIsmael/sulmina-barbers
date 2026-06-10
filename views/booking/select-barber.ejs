@@ -1,0 +1,44 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<main id="main">
+  <section class="container container--narrow">
+    <%- include('_step-nav', { step }) %>
+
+    <header class="page-head">
+      <div class="service-tag">
+        <span class="service-tag__name"><%= service.name %></span>
+        <span class="service-tag__meta"><%= service.durationMinutes %> min · £<%= service.price %></span>
+        <a class="service-tag__change" href="/book">Change</a>
+      </div>
+      <h1>Choose your barber.</h1>
+      <p class="page-head__lede">Every barber covers every service. Pick a favourite, or take the next free chair.</p>
+    </header>
+  </section>
+
+  <section class="container container--narrow" style="padding-bottom: var(--s-9);">
+    <div class="barber-cards">
+      <a class="barber-card barber-card--any" href="/book/time?service=<%= service.slug %>&barber=any">
+        <span class="barber-card__avatar" aria-hidden="true">★</span>
+        <span class="barber-card__text">
+          <span class="barber-card__name">Any available</span>
+          <span class="barber-card__role">First free chair — fastest option</span>
+        </span>
+        <span class="barber-card__arrow" aria-hidden="true">→</span>
+      </a>
+
+      <% barbers.forEach(function(b){ %>
+        <a class="barber-card" href="/book/time?service=<%= service.slug %>&barber=<%= b.id %>">
+          <span class="barber-card__avatar" aria-hidden="true"><%= b.name.slice(0, 1).toUpperCase() %></span>
+          <span class="barber-card__text">
+            <span class="barber-card__name"><%= b.name %></span>
+            <span class="barber-card__role">Professional barber</span>
+          </span>
+          <span class="barber-card__arrow" aria-hidden="true">→</span>
+        </a>
+      <% }); %>
+    </div>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

@@ -152,7 +152,7 @@ function buildLocalBusinessJsonLd() {
     openingHoursSpecification: buildOpeningHoursSpec(),
     priceRange: '££',
     image: siteUrl() + '/images/gallery/01.jpg',
-    logo: siteUrl() + '/img/favicon.svg',
+    logo: siteUrl() + '/img/logo.png',
     sameAs: [ SHOP.instagram ]
   };
 }

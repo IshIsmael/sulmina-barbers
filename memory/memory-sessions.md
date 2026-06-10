@@ -58,3 +58,28 @@ home / services / about / contact pages.
   Claude design link had expired with 404). The SVG mark is a
   brand-consistent stand-in. To swap in the real logo: replace the
   artwork in `views/partials/logo.ejs` and `public/img/favicon.svg`.
+
+## 2026-06-10 (later) — Real logo + design-handoff booking flow
+
+User supplied the actual logo PNG and the Claude Design handoff bundle.
+
+**Did:**
+- `public/img/logo.png` — real logo (white + amber, for ink surfaces).
+  Footer now shows the actual PNG; JSON-LD `logo` points at it.
+- `views/partials/logo.ejs` rewritten as the storefront mark from the
+  logo (striped awning, door + scissors, base), currentColor neutrals
+  so it adapts to paper/ink. Header lockup: SULMINA · mark ·
+  BARBERSHOP in Oswald caps ("BARBERSHOP" hidden < 480px). Favicon
+  rebuilt from the same mark.
+- Booking flow now 4 steps per the design handoff (kept our correct
+  data/engine; design's barbers/prices/address were wrong):
+  Service (grouped by category) → Barber (cards: "Any available" ★ +
+  the three barbers) → Time (unchanged grid + new "Jump to next
+  opening" button on fully-booked days) → Details (build-up summary
+  card with service/duration/price/barber/when).
+- Entry links (home, services) route through `/book/barber` now.
+- Step nav collapses inactive steps to numbered dots < 480px.
+
+**Decisions:** kept light "Ink & Paper" palette (user preference) —
+ported the design's flow, not its dark theme. Kept 7-day week strip
+over the design's 14-day strip (lookahead is 28 days).

@@ -70,24 +70,30 @@
   .site-header__inner { padding: 0 var(--s-8); }
 }
 
+/* Brand lockup mirrors the shop logo: SULMINA · storefront · BARBERSHOP
+   in heavy condensed caps. Oswald stands in for the logo's typeface. */
 .brand {
   display: inline-flex;
   align-items: center;
   gap: var(--s-2);
   color: var(--ink);
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 1.6rem;
-  letter-spacing: -0.04em;
+  font-family: 'Oswald', var(--font-body);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
   text-decoration: none;
   line-height: 1;
-  text-transform: lowercase;
+  text-transform: uppercase;
 }
 .brand:hover { color: var(--brass); }
 .brand__mark {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
+}
+/* The full lockup is too wide once the compact Book CTA joins the row. */
+@media (max-width: 479px) {
+  .brand__word--tail { display: none; }
 }
 
 .site-nav {
@@ -312,8 +318,8 @@ body.menu-open .mobile-menu {
   .site-footer { padding-top: var(--s-6); }
 }
 
-.site-footer .brand { color: var(--paper); margin-bottom: var(--s-4); font-size: 2rem; }
-.site-footer .brand__mark { width: 30px; height: 30px; }
+.site-footer .brand { margin-bottom: var(--s-4); }
+.site-footer__logo { width: min(100%, 280px); height: auto; }
 
 .site-footer__tagline {
   margin: 0;
