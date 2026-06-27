@@ -13,6 +13,9 @@ const bookingRouter = require('./src/routes/booking');
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const PREVIEW_NO_DB = process.env.PREVIEW_NO_DB === 'true';
+const ASSET_VERSION = encodeURIComponent(
+  process.env.RENDER_GIT_COMMIT || process.env.SITE_VERSION || String(Date.now())
+);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -27,6 +30,7 @@ app.use((req, res, next) => {
   res.locals.shop = SHOP;
   res.locals.hours = HOURS_DISPLAY;
   res.locals.currentPath = req.path;
+  res.locals.assetPath = (asset) => `${asset}?v=${ASSET_VERSION}`;
   next();
 });
 
