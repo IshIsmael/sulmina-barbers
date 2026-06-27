@@ -10,6 +10,7 @@
  */
 
 const { SHOP, OPENING_HOURS } = require('../config/shop');
+const { SERVICES } = require('../data/services');
 
 /**
  * Base URL for canonical links. Overridden via SITE_URL env var in
@@ -32,7 +33,7 @@ function pageMeta(key, overrides = {}) {
   const pages = {
     home: {
       title: 'Barber Shop in Southgate, North London · Sulmina',
-      description: 'Sulmina Barber Shop is at 43 High Street, Southgate N14. Book haircuts, skin fades, beard work and full-service grooming online.',
+      description: 'Sulmina Barber Shop is at 43 High Street, Southgate N14. Book haircuts, skin fades, beard trims and full-service grooming online.',
       path: '/',
       ogType: 'website'
     },
@@ -62,7 +63,7 @@ function pageMeta(key, overrides = {}) {
     },
     book: {
       title: 'Book a Chair · Sulmina Barber Shop, Southgate',
-      description: 'Book your next cut at Sulmina, Southgate N14. Pick a service and a time online.',
+      description: 'Book your next cut at Sulmina, Southgate N14. Pick a barber and time online.',
       path: '/book',
       ogType: 'website',
       noindex: true // booking pages with query params, avoid indexing
@@ -150,11 +151,55 @@ function buildLocalBusinessJsonLd() {
       longitude: -0.1283
     },
     openingHoursSpecification: buildOpeningHoursSpec(),
-    priceRange: '££',
+    priceRange: 'From £11',
     image: siteUrl() + '/images/gallery/01.jpg',
     logo: siteUrl() + '/img/logo.png',
-    sameAs: [ SHOP.instagram ]
+    sameAs: [ SHOP.instagram ],
+    makesOffer: SERVICES.map(service => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: service.name,
+        description: service.description,
+        provider: { '@id': siteUrl() + '/#shop' }
+      },
+      price: service.price,
+      priceCurrency: 'GBP',
+      availability: 'https://schema.org/InStock',
+      url: siteUrl() + `/book?service=${encodeURIComponent(service.slug)}`
+    }))
   };
 }
 
-module.exports = { pageMeta, buildLocalBusinessJsonLd, siteUrl };
+function buildServiceListJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': siteUrl() + '/services#services',
+    name: 'Sulmina Barber Shop services and prices',
+    itemListElement: SERVICES.map((service, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Service',
+        name: service.name,
+        description: service.description,
+        serviceType: service.category,
+        provider: { '@id': siteUrl() + '/#shop' },
+        offers: {
+          '@type': 'Offer',
+          price: service.price,
+          priceCurrency: 'GBP',
+          url: siteUrl() + `/book?service=${encodeURIComponent(service.slug)}`
+        }
+      }
+    }))
+  };
+}
+
+module.exports = {
+  pageMeta,
+  buildLocalBusinessJsonLd,
+  buildServiceListJsonLd,
+  siteUrl
+};

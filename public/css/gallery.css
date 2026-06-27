@@ -1,63 +1,22 @@
-/* ==========================================================================
-   gallery.css — gallery page grid
-   Optimised for portrait photography. Each tile reserves a 3:4 aspect
-   ratio so the layout is stable before images finish loading (prevents
-   cumulative layout shift / CLS).
-   ========================================================================== */
-
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: var(--s-3);
-}
-
-@media (min-width: 640px) {
-  .gallery-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--s-4);
-  }
-}
-
-@media (min-width: 960px) {
-  .gallery-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--s-5);
-  }
 }
 
 .gallery-tile {
   margin: 0;
-  padding: 0;
-  overflow: hidden;
-  border-radius: var(--radius-md);
-  background: color-mix(in oklab, var(--ink) 6%, transparent);
-  aspect-ratio: 3 / 4;
-  position: relative;
+  aspect-ratio: 4 / 5;
 }
 
-.gallery-tile img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 400ms ease;
+.gallery-tile:nth-child(3n + 2) { aspect-ratio: 1 / 1; }
+.gallery-tile:nth-child(4n) { aspect-ratio: 5 / 4; }
+
+@media (min-width: 640px) {
+  .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-.gallery-tile:hover img {
-  transform: scale(1.03);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .gallery-tile img { transition: none; }
-  .gallery-tile:hover img { transform: none; }
-}
-
-/* Subtle border for definition against the bone background */
-.gallery-tile::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
-  pointer-events: none;
+@media (min-width: 1040px) {
+  .gallery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .gallery-tile:nth-child(5n + 1) { grid-row: span 2; aspect-ratio: auto; }
 }

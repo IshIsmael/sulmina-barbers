@@ -12,6 +12,7 @@ const bookingRouter = require('./src/routes/booking');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
+const PREVIEW_NO_DB = process.env.PREVIEW_NO_DB === 'true';
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -29,7 +30,18 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/book', bookingRouter);
+app.get('/health', (_req, res) => {
+  res.status(200).json({ ok: true });
+});
+
+if (PREVIEW_NO_DB) {
+  app.use('/book', (req, res) => {
+    const meta = pageMeta('book', { noindex: true });
+    res.render('book-stub', { title: meta.title, meta });
+  });
+} else {
+  app.use('/book', bookingRouter);
+}
 app.use('/', pagesRouter);
 
 app.use((req, res) => {
@@ -44,14 +56,18 @@ app.use((err, req, res, _next) => {
 });
 
 async function start() {
-  try {
+  if (PREVIEW_NO_DB) {
+    console.warn('[mongo] PREVIEW_NO_DB=true -> skipping MongoDB startup');
+  } else {
+    try {
     const db = await mongo.connect();
     console.log(`[mongo] connected → database: ${db.databaseName}`);
     await mongo.ensureIndexes();
     console.log('[mongo] indexes ensured');
-  } catch (err) {
-    console.error('[mongo] startup failed:', err.message);
-    process.exit(1);
+    } catch (err) {
+      console.error('[mongo] startup failed:', err.message);
+      process.exit(1);
+    }
   }
 
   if (email.isConfigured()) {

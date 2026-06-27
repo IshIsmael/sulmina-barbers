@@ -23,13 +23,65 @@
   // /book/time → /book/time/slots. This keeps one source of truth.
   function toFragmentUrl(href) {
     const url = new URL(href, window.location.origin);
+    if (url.pathname === '/book') url.pathname = '/book/slots';
     if (url.pathname === '/book/time') url.pathname = '/book/time/slots';
     return url;
+  }
+
+  function setSummaryValue(key, value) {
+    const el = document.querySelector('[data-booking-summary="' + key + '"]');
+    if (el && value) el.textContent = value;
+  }
+
+  function syncBookingPage(grid, navUrl) {
+    const page = document.querySelector('[data-booking-page]');
+    if (!page || !grid) return;
+
+    const service = grid.dataset.service || navUrl.searchParams.get('service') || '';
+    const barber = grid.dataset.barber || navUrl.searchParams.get('barber') || 'any';
+    const date = grid.dataset.date || navUrl.searchParams.get('date') || '';
+    const weekStart = grid.dataset.weekStart || navUrl.searchParams.get('weekStart') || date;
+    const dateLong = grid.dataset.dateLong || '';
+    const barberLabel = grid.dataset.barberLabel || 'Any available';
+    const selectedSlotIso = grid.dataset.selectedSlotIso || navUrl.searchParams.get('slot') || '';
+    const selectedSlotLabel = grid.dataset.selectedSlotLabel || '';
+    const selectedSlotDateLong = grid.dataset.selectedSlotDateLong || '';
+
+    document.querySelectorAll('[data-booking-barber-card]').forEach(function (card) {
+      const cardBarber = card.dataset.barberValue || 'any';
+      const isSelected = cardBarber === barber;
+      const next = new URL('/book', window.location.origin);
+      if (service) next.searchParams.set('service', service);
+      next.searchParams.set('barber', cardBarber);
+      if (date) next.searchParams.set('date', date);
+      if (weekStart) next.searchParams.set('weekStart', weekStart);
+
+      card.classList.toggle('is-selected', isSelected);
+      card.setAttribute('aria-current', isSelected ? 'true' : 'false');
+      card.href = next.pathname + '?' + next.searchParams.toString();
+    });
+
+    const barberInput = page.querySelector('[data-booking-barber-input]');
+    if (barberInput) barberInput.value = barber;
+
+    const slotInput = page.querySelector('[data-booking-slot-input]');
+    if (slotInput) slotInput.value = selectedSlotIso;
+
+    const confirm = page.querySelector('[data-booking-confirm]');
+    if (confirm) confirm.disabled = !selectedSlotIso;
+
+    const hint = page.querySelector('[data-booking-hint]');
+    if (hint) hint.hidden = Boolean(selectedSlotIso);
+
+    setSummaryValue('barber', barberLabel);
+    setSummaryValue('date', selectedSlotDateLong || dateLong);
+    setSummaryValue('time', selectedSlotLabel || 'Select a time');
   }
 
   async function swap(anchor) {
     const navUrl = new URL(anchor.href, window.location.origin);
     const fragUrl = toFragmentUrl(anchor.href);
+    const clickedInsideGrid = Boolean(anchor.closest(ROOT_SELECTOR));
 
     const current = document.querySelector(ROOT_SELECTOR);
     if (!current) { window.location.href = navUrl.toString(); return; }
@@ -50,13 +102,14 @@
       if (!replacement) throw new Error('no time-grid in fragment response');
 
       current.replaceWith(replacement);
+      syncBookingPage(replacement, navUrl);
 
       // Update the browser URL (the user-facing /book/time one, not /slots).
       window.history.pushState({}, '', navUrl.toString());
 
       // Move focus to the day heading for keyboard users.
       const heading = replacement.querySelector('.slots-head');
-      if (heading) heading.focus();
+      if (heading && clickedInsideGrid) heading.focus();
 
       // Smooth-scroll the slot region into view on small screens if the
       // click happened from a date pill (fresh day means new grid).
@@ -101,6 +154,7 @@
       const replacement = tpl.content.querySelector(ROOT_SELECTOR);
       if (!replacement) throw new Error('no time-grid in popstate fragment');
       current.replaceWith(replacement);
+      syncBookingPage(replacement, new URL(window.location.href));
     } catch (err) {
       window.location.reload();
     }

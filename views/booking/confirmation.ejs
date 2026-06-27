@@ -7,27 +7,33 @@
       <p class="eyebrow">Booked</p>
       <h1>See you soon, <%= booking.customerName.split(' ')[0] %>.</h1>
       <p class="page-head__lede">
-        A confirmation is on its way to <strong><%= booking.customerEmail %></strong>.
+        <% if (typeof emailConfigured !== 'undefined' && emailConfigured) { %>
+          A confirmation is on its way to <strong><%= booking.customerEmail %></strong>.
+        <% } else { %>
+          Your booking is confirmed.
+        <% } %>
         If you need to change it, give the shop a ring on
         <a href="<%= shop.phoneHref %>"><%= shop.phone %></a>.
       </p>
     </header>
   </section>
 
-  <section class="container container--narrow" style="padding-bottom: var(--s-9);">
-    <div class="receipt">
-      <dl>
-        <dt>Service</dt>  <dd><%= booking.serviceName %></dd>
-        <dt>When</dt>     <dd><%= slotDateLong %> · <%= slotLabel %></dd>
-        <dt>Duration</dt> <dd><%= booking.serviceDuration %> min</dd>
-        <dt>Price</dt>    <dd>£<%= booking.servicePrice %></dd>
-        <dt>Barber</dt>   <dd><%= barberName %></dd>
-        <dt>Where</dt>    <dd><%= shop.address %></dd>
-      </dl>
-    </div>
+  <section class="section section--dark" aria-label="Booking receipt">
+    <div class="container container--narrow">
+      <div class="receipt">
+        <dl>
+          <dt>Service</dt>  <dd><%= booking.serviceName %></dd>
+          <dt>When</dt>     <dd><%= slotDateLong %> &middot; <%= slotLabel %></dd>
+          <dt>Duration</dt> <dd><%= booking.serviceDuration %> min</dd>
+          <dt>Price</dt>    <dd>&pound;<%= booking.servicePrice %></dd>
+          <dt>Barber</dt>   <dd><%= barberName %></dd>
+          <dt>Where</dt>    <dd><%= shop.address %></dd>
+        </dl>
+      </div>
 
-    <div style="margin-top: var(--s-6);">
-      <a class="btn btn--ghost" href="/">← Back home</a>
+      <p style="margin-top: var(--s-6);">
+        <a class="btn btn--ghost" href="/">&larr; Back home</a>
+      </p>
     </div>
   </section>
 </main>

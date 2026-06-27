@@ -3,40 +3,62 @@
 
 <main id="main">
   <section class="container">
-    <header class="page-head">
-      <span class="page-head__ghost" aria-hidden="true">Prices</span>
-      <p class="eyebrow">Services</p>
-      <h1>Services and prices.</h1>
+    <header class="page-head page-head--split">
+      <div>
+        <span class="page-head__ghost" aria-hidden="true">Prices</span>
+        <p class="eyebrow">Services</p>
+        <h1>Services and prices.</h1>
+      </div>
       <p class="page-head__lede">
-        Clear prices for haircuts, skin fades, beard work and grooming add-ons.
-        Choose a service, then pick a time that suits you.
+        Hair cuts, fades, beard work and grooming add-ons at 43 High Street,
+        Southgate N14. Pick a service to see live booking times.
       </p>
     </header>
   </section>
 
-  <% groups.forEach(function(group){ %>
-    <% if (group.items.length) { %>
-      <section class="price-group" aria-labelledby="group-<%= group.id %>">
-        <h2 id="group-<%= group.id %>" class="price-group__title"><%= group.label %></h2>
-        <ul class="menu-list">
-          <% group.items.forEach(function(s){ %>
-            <li>
-              <a class="menu-row" href="/book/barber?service=<%= s.slug %>">
-                <h3 class="menu-row__name"><%= s.name %></h3>
-                <p class="menu-row__desc"><%= s.description %></p>
-                <span class="menu-row__price">£<%= s.price %></span>
-              </a>
-            </li>
-          <% }); %>
-        </ul>
-      </section>
-    <% } %>
-  <% }); %>
+  <section class="section section--paper" aria-label="Service menu">
+    <div class="container">
+      <nav class="service-jump" aria-label="Service categories">
+        <% groups.forEach(function(group){ %>
+          <% if (group.items.length) { %>
+            <a href="#group-<%= group.id %>">
+              <span><%= group.label %></span>
+              <strong><%= group.items.length %></strong>
+            </a>
+          <% } %>
+        <% }); %>
+      </nav>
 
-  <section class="section section--contrast" aria-label="Book CTA">
-    <div class="container" style="text-align: center;">
-      <h2 style="max-width: 20ch; margin: 0 auto var(--s-5);">Ready for a time?</h2>
-      <a class="btn btn--primary btn--lg" href="/book">Book now</a>
+      <% groups.forEach(function(group){ %>
+        <% if (group.items.length) { %>
+          <section class="booking-cat" aria-labelledby="group-<%= group.id %>">
+            <h2 id="group-<%= group.id %>" class="booking-cat__title"><%= group.label %></h2>
+            <div class="price-board">
+              <% group.items.forEach(function(s){ %>
+                <a class="price-row" href="/book?service=<%= s.slug %>" aria-label="Book <%= s.name %> for &pound;<%= s.price %>">
+                  <div class="price-row__main">
+                    <h3 class="price-row__name"><%= s.name %></h3>
+                    <p class="price-row__desc"><%= s.description %></p>
+                  </div>
+                  <div class="price-row__meta">
+                    <span class="price-row__price">&pound;<%= s.price %></span>
+                    <span class="price-row__duration"><%= s.durationMinutes %> min</span>
+                  </div>
+                  <span class="price-row__arrow" aria-hidden="true">Book</span>
+                </a>
+              <% }); %>
+            </div>
+          </section>
+        <% } %>
+      <% }); %>
+    </div>
+  </section>
+
+  <section class="section section--dark cta-band" aria-label="Book CTA">
+    <div class="container">
+      <p class="eyebrow eyebrow--bare">Ready for a time?</p>
+      <h2>Choose your chair.</h2>
+      <a class="btn btn--gold btn--lg" href="#group-signature">Choose a service <span class="arr" aria-hidden="true">&rarr;</span></a>
     </div>
   </section>
 </main>

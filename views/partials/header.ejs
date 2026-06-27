@@ -1,21 +1,27 @@
-<header class="site-header <%= currentPath === '/' ? 'site-header--overlay' : 'site-header--solid' %>">
+<%
+  const isBookingPath = typeof currentPath === 'string' && currentPath.indexOf('/book') === 0;
+  const headerClass = currentPath === '/'
+    ? 'site-header--overlay'
+    : (isBookingPath ? 'site-header--paper' : 'site-header--solid');
+%>
+<header class="site-header <%= headerClass %>">
   <div class="site-header__inner">
-    <a class="brand u-clean" href="/" aria-label="Sulmina Barbershop — home">
+    <a class="brand u-clean" href="/" aria-label="Sulmina Barber Shop home">
       <%- include('logo') %>
       <span class="brand__text">
         <span class="brand__name">Sulmina</span>
-        <span class="brand__sub">Barbershop</span>
+        <span class="brand__sub">Barber Shop</span>
       </span>
     </a>
 
     <nav class="site-nav" aria-label="Primary">
       <a href="/services" class="<%= currentPath === '/services' ? 'is-active' : '' %>">Services</a>
-      <a href="/about"    class="<%= currentPath === '/about'    ? 'is-active' : '' %>">About</a>
-      <a href="/gallery"  class="<%= currentPath === '/gallery'  ? 'is-active' : '' %>">Gallery</a>
-      <a href="/contact"  class="<%= currentPath === '/contact'  ? 'is-active' : '' %>">Contact</a>
+      <a href="/about" class="<%= currentPath === '/about' ? 'is-active' : '' %>">About</a>
+      <a href="/gallery" class="<%= currentPath === '/gallery' ? 'is-active' : '' %>">Gallery</a>
+      <a href="/contact" class="<%= currentPath === '/contact' ? 'is-active' : '' %>">Contact</a>
     </nav>
 
-    <a class="btn btn--gold site-header__cta" href="/book">Book</a>
+    <a class="btn btn--gold site-header__cta" href="/services">Book a chair</a>
 
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
       <span></span><span></span><span></span>
@@ -24,15 +30,21 @@
 </header>
 
 <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <button class="mobile-menu__close" type="button" aria-label="Close menu" data-menu-close>
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+  </button>
 
-  <nav class="mobile-menu__nav" aria-label="Primary (mobile)">
+  <nav class="mobile-menu__nav" aria-label="Primary mobile">
     <a href="/services" class="<%= currentPath === '/services' ? 'is-active' : '' %>">Services</a>
-    <a href="/about"    class="<%= currentPath === '/about'    ? 'is-active' : '' %>">About</a>
-    <a href="/gallery"  class="<%= currentPath === '/gallery'  ? 'is-active' : '' %>">Gallery</a>
-    <a href="/contact"  class="<%= currentPath === '/contact'  ? 'is-active' : '' %>">Contact</a>
+    <a href="/about" class="<%= currentPath === '/about' ? 'is-active' : '' %>">About</a>
+    <a href="/gallery" class="<%= currentPath === '/gallery' ? 'is-active' : '' %>">Gallery</a>
+    <a href="/contact" class="<%= currentPath === '/contact' ? 'is-active' : '' %>">Contact</a>
   </nav>
 
-  <a class="mobile-menu__cta" href="/book">Book now →</a>
+  <a class="btn btn--gold mobile-menu__cta" href="/services">
+    Book a chair <span class="arr" aria-hidden="true">&rarr;</span>
+  </a>
 
   <div class="mobile-menu__info">
     <div>
@@ -54,5 +66,4 @@
 
     <p class="mobile-menu__address"><%= shop.address %></p>
   </div>
-
 </div>

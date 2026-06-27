@@ -1,35 +1,165 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header') %>
+<%
+  const activeSlotIso = typeof selectedSlotIso !== 'undefined' ? selectedSlotIso : null;
+  const activeSlotLabel = typeof selectedSlotLabel !== 'undefined' ? selectedSlotLabel : null;
+  const activeSlotDateLong = typeof selectedSlotDateLong !== 'undefined' ? selectedSlotDateLong : null;
+  const activeBarberLabel = typeof barberLabel !== 'undefined' ? barberLabel : 'Any available';
+%>
 
-<main id="main">
-  <section class="container">
-    <%- include('_step-nav', { step }) %>
-    <header class="page-head">
-      <p class="eyebrow">Book now</p>
-      <h1>Choose your service.</h1>
-      <p class="page-head__lede">Pick what you're coming in for — the duration sets your slot length.</p>
+<main id="main" class="booking-main booking-main--paper">
+  <section class="booking-studio container" data-booking-page>
+    <header class="booking-studio__header">
+      <a class="booking-studio__back" href="/" aria-label="Back home">
+        <span aria-hidden="true">&larr;</span>
+      </a>
+      <div>
+        <p class="booking-studio__kicker">Book a chair</p>
+        <h1>Book <%= service.name %>.</h1>
+        <p class="booking-studio__service">
+          <span><%= service.durationMinutes %> min &middot; from &pound;<%= service.price %></span>
+          <a href="/services">Change service</a>
+        </p>
+      </div>
+      <p>
+        Choose a barber, date, time and details on one page.
+        No payment taken now.
+      </p>
     </header>
-  </section>
 
-  <section class="container" style="padding-bottom: var(--s-9);">
-    <% groups.forEach(function(group){ %>
-      <% if (group.items.length) { %>
-        <section class="booking-cat" aria-labelledby="cat-<%= group.id %>">
-          <h2 id="cat-<%= group.id %>" class="booking-cat__title"><%= group.label %></h2>
-          <ul class="menu-list">
-            <% group.items.forEach(function(s){ %>
-              <li>
-                <a class="menu-row" href="/book/barber?service=<%= s.slug %>">
-                  <h3 class="menu-row__name"><%= s.name %></h3>
-                  <p class="menu-row__desc"><%= s.description %> <small style="color:var(--ink-mute);">· <%= s.durationMinutes %> min</small></p>
-                  <span class="menu-row__price">£<%= s.price %></span>
-                </a>
-              </li>
+    <ol class="booking-progress" aria-label="Booking progress">
+      <li class="is-complete"><span>1</span>Service</li>
+      <li class="<%= barberFilterParam ? 'is-complete' : '' %>"><span>2</span>Barber</li>
+      <li class="<%= activeSlotIso ? 'is-complete' : 'is-current' %>"><span>3</span>Date &amp; time</li>
+      <li class="<%= activeSlotIso ? 'is-current' : '' %>"><span>4</span>Details</li>
+    </ol>
+
+    <div class="booking-studio__grid">
+      <div class="booking-studio__flow">
+        <section class="booking-section booking-section--barber" aria-labelledby="booking-barber-title">
+          <div class="booking-section__head">
+            <p class="booking-section__label">Choose a barber</p>
+            <h2 id="booking-barber-title">Pick your chair.</h2>
+          </div>
+
+          <div class="booking-barber-cards" role="list">
+            <a class="booking-barber-card <%= barberFilterParam === 'any' ? 'is-selected' : '' %>"
+               role="listitem"
+               data-tg-swap
+               data-booking-barber-card
+               data-barber-value="any"
+               href="/book?service=<%= service.slug %>&amp;barber=any&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>">
+              <span class="booking-barber-card__avatar booking-barber-card__avatar--icon" aria-hidden="true">Any</span>
+              <span class="booking-barber-card__name">Any available</span>
+              <span class="booking-barber-card__role">Fastest option</span>
+            </a>
+
+            <% barbers.forEach(function(b, i){ %>
+              <a class="booking-barber-card <%= barberFilterParam === String(b.id) ? 'is-selected' : '' %>"
+                 role="listitem"
+                 data-tg-swap
+                 data-booking-barber-card
+                 data-barber-value="<%= b.id %>"
+                 href="/book?service=<%= service.slug %>&amp;barber=<%= b.id %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>">
+                <span class="booking-barber-card__avatar" aria-hidden="true">
+                  <img src="/images/gallery/0<%= (i % 3) + 2 %>.jpg" alt="" loading="lazy" decoding="async">
+                </span>
+                <span class="booking-barber-card__name"><%= b.name %></span>
+                <span class="booking-barber-card__role">Barber</span>
+              </a>
             <% }); %>
-          </ul>
+          </div>
         </section>
-      <% } %>
-    <% }); %>
+
+        <section class="booking-section booking-section--date" aria-labelledby="booking-date-title">
+          <div class="booking-section__head">
+            <p class="booking-section__label">Pick a date</p>
+            <h2 id="booking-date-title"><%= weekRangeLabel %></h2>
+          </div>
+
+          <div class="booking-section--time">
+            <%- include('_time-grid', {
+              bookingBasePath: '/book',
+              showBarberTabs: false,
+              service, strip, weekStart, weekRangeLabel,
+              prevWeekStart, nextWeekStart,
+              dateKey, dateLong, groups, totalSlotCount,
+              nextOpen, barberTabs, barberFilter, barberFilterParam,
+              barberLabel: activeBarberLabel,
+              selectedSlotIso: activeSlotIso,
+              selectedSlotLabel: activeSlotLabel,
+              selectedSlotDateLong: activeSlotDateLong,
+              shop
+            }) %>
+          </div>
+        </section>
+      </div>
+
+      <aside class="booking-section booking-section--details booking-studio__summary" aria-labelledby="booking-details-title">
+        <div class="booking-ticket">
+          <p class="booking-section__label">Booking summary</p>
+          <h2 id="booking-details-title"><%= activeSlotIso ? 'Ready to confirm.' : 'Choose a time.' %></h2>
+          <dl>
+            <dt>Service</dt>
+            <dd><%= service.name %></dd>
+            <dt>Barber</dt>
+            <dd data-booking-summary="barber"><%= activeBarberLabel %></dd>
+            <dt>Date</dt>
+            <dd data-booking-summary="date"><%= activeSlotDateLong || dateLong %></dd>
+            <dt>Time</dt>
+            <dd data-booking-summary="time"><%= activeSlotLabel || 'Select a time' %></dd>
+            <dt>Price</dt>
+            <dd>&pound;<%= service.price %></dd>
+          </dl>
+          <p>No payment taken now.</p>
+        </div>
+
+        <form class="form booking-details-form" method="post" action="/book/confirm" novalidate>
+          <input type="hidden" name="service" value="<%= service.slug %>">
+          <input type="hidden" name="slot" value="<%= activeSlotIso || '' %>" data-booking-slot-input>
+          <input type="hidden" name="barber" value="<%= barberFilterParam %>" data-booking-barber-input>
+
+          <label class="field">
+            <span>Full name</span>
+            <input name="name" type="text" autocomplete="name" required value="<%= form.name %>"
+              <% if (errors && errors.name) { %> aria-invalid="true" aria-describedby="err-name"<% } %>>
+            <% if (errors && errors.name) { %>
+              <small class="field__error" id="err-name"><%= errors.name %></small>
+            <% } %>
+          </label>
+
+          <label class="field">
+            <span>Phone number</span>
+            <input name="phone" type="tel" autocomplete="tel" inputmode="tel" required value="<%= form.phone %>"
+              <% if (errors && errors.phone) { %> aria-invalid="true" aria-describedby="err-phone"<% } %>>
+            <% if (errors && errors.phone) { %>
+              <small class="field__error" id="err-phone"><%= errors.phone %></small>
+            <% } %>
+          </label>
+
+          <label class="field">
+            <span>Email address</span>
+            <input name="email" type="email" autocomplete="email" inputmode="email" required value="<%= form.email %>"
+              <% if (errors && errors.email) { %> aria-invalid="true" aria-describedby="err-email"<% } %>>
+            <% if (errors && errors.email) { %>
+              <small class="field__error" id="err-email"><%= errors.email %></small>
+            <% } %>
+          </label>
+
+          <label class="field">
+            <span>Notes <small>(optional)</small></span>
+            <textarea name="notes" rows="3"><%= form.notes %></textarea>
+          </label>
+
+          <button class="btn btn--primary btn--lg" type="submit" data-booking-confirm <%= activeSlotIso ? '' : 'disabled' %>>
+            Confirm booking <span class="arr" aria-hidden="true">&rarr;</span>
+          </button>
+          <p class="booking-details-form__hint" data-booking-hint <%= activeSlotIso ? 'hidden' : '' %>>
+            Select an available time to unlock confirmation.
+          </p>
+        </form>
+      </aside>
+    </div>
   </section>
 </main>
 

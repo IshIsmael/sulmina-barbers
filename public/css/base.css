@@ -1,261 +1,253 @@
 /* ==========================================================================
-   base.css — reset, tokens, typography
-   Voice: Anton display caps (matches the shop logo) · Manrope body ·
-   Fraunces italic accents. Light "Ink & Paper" surfaces, brass accents.
+   base.css - reset, tokens, typography
+   Direction: Midnight Atelier / Brass Street Club
    ========================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; }
 
 :root {
-  /* Palette */
-  --ink:         #141b16; /* Deep, near-black Forest */
-  --ink-soft:    #1c251f;
-  --paper:       #fcfaf5; /* Warm Bone */
-  --paper-dim:   #f2eee4;
-  --brass:       #d2a656; /* Metallic Gold */
-  --brass-hi:    #e8c484;
-  --danger:      #b0412e;
+  color-scheme: dark light;
 
-  /* Derived semantic tokens — track ink/paper if either is retuned. */
-  --ink-mute:    color-mix(in oklab, var(--ink) 60%, var(--paper)); /* muted text on paper */
-  --rule:        color-mix(in oklab, var(--ink) 14%, var(--paper)); /* hairline borders */
+  --ink: #07100c;
+  --ink-2: #0b1712;
+  --ink-3: #12221b;
+  --charcoal: #1b241f;
+  --charcoal-2: #26302a;
+  --bone: #f5ead6;
+  --paper: #fff6e6;
+  --paper-dim: #eadcc2;
+  --paper-soft: rgba(255, 246, 230, 0.78);
+  --brass: #c8953f;
+  --brass-2: #edc36d;
+  --brass-deep: #8a6126;
+  --oxblood: #7d2023;
+  --danger: #c24a3d;
+  --success: #73a86f;
 
-  /* Typography: condensed display caps + humanist body + serif accent */
+  --text: var(--bone);
+  --text-soft: rgba(245, 234, 214, 0.76);
+  --text-faint: rgba(245, 234, 214, 0.56);
+  --text-ink: #101713;
+  --text-ink-soft: rgba(16, 23, 19, 0.68);
+  --rule: rgba(245, 234, 214, 0.16);
+  --rule-strong: rgba(200, 149, 63, 0.42);
+  --paper-rule: rgba(16, 23, 19, 0.14);
+
   --font-display: 'Anton', 'Arial Narrow', sans-serif;
-  --font-body:    'Manrope', system-ui, -apple-system, sans-serif;
-  --font-accent:  'Fraunces', 'Georgia', serif;
+  --font-body: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-accent: 'Fraunces', Georgia, serif;
 
-  /* Fluid Spacing Scale */
+  --text-xs: 0.72rem;
+  --text-sm: 0.84rem;
+  --text-base: 1rem;
+  --text-lg: 1.16rem;
+  --text-xl: 1.42rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: clamp(2.1rem, 5vw, 4rem);
+  --text-hero: clamp(3rem, 9vw, 7.2rem);
+
   --s-1: clamp(0.25rem, 0.2vw + 0.2rem, 0.35rem);
-  --s-2: clamp(0.5rem, 0.4vw + 0.4rem, 0.65rem);
-  --s-3: clamp(0.75rem, 0.6vw + 0.6rem, 0.95rem);
-  --s-4: clamp(1rem, 0.8vw + 0.8rem, 1.25rem);
-  --s-5: clamp(1.5rem, 1.2vw + 1.2rem, 2rem);
-  --s-6: clamp(2rem, 1.6vw + 1.6rem, 2.75rem);
-  --s-7: clamp(3rem, 2.4vw + 2.4rem, 4.25rem);
-  --s-8: clamp(4.5rem, 3.6vw + 3.6rem, 6.25rem);
-  --s-9: clamp(7rem, 5.6vw + 5.6rem, 9.75rem);
-  --s-10: clamp(10rem, 8vw + 8rem, 14rem);
+  --s-2: clamp(0.5rem, 0.35vw + 0.42rem, 0.7rem);
+  --s-3: clamp(0.75rem, 0.55vw + 0.62rem, 1rem);
+  --s-4: clamp(1rem, 0.75vw + 0.8rem, 1.3rem);
+  --s-5: clamp(1.35rem, 1vw + 1.05rem, 1.9rem);
+  --s-6: clamp(1.9rem, 1.45vw + 1.45rem, 2.8rem);
+  --s-7: clamp(2.7rem, 2.2vw + 2.05rem, 4.2rem);
+  --s-8: clamp(4rem, 3vw + 3rem, 6rem);
+  --s-9: clamp(5.5rem, 4.6vw + 3.9rem, 9rem);
 
-  --radius-sm: 2px;
-  --radius-md: 6px;
-  --radius-lg: 12px;
+  --radius-xs: 2px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+  --radius-organic: 42% 58% 52% 48% / 45% 42% 58% 55%;
 
-  --container:        1440px;
-  --container-narrow: 840px;
-
-  --header-h: 80px;
+  --container: 1440px;
+  --container-narrow: 900px;
+  --header-h: 76px;
   --safe-top: env(safe-area-inset-top, 0px);
   --header-total: calc(var(--header-h) + var(--safe-top));
 
-  /* Motion */
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-  --transition-slow: 0.8s var(--ease-out-expo);
-  --transition-med: 0.4s var(--ease-out-expo);
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-/* Denser shell on phones — an 80px bar eats too much of a small
-   viewport; 64px keeps the brand legible and buys content room. */
-@media (max-width: 767px) {
+@media (max-width: 760px) {
   :root { --header-h: 64px; }
 }
 
 html, body { margin: 0; padding: 0; }
+
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  background-color: var(--ink); /* Prevent white flash */
+  background: var(--ink);
   overflow-x: clip;
 }
 
 body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.65;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  -webkit-font-smoothing: antialiased;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(200, 149, 63, 0.13), transparent 28rem),
+    radial-gradient(circle at 95% 16%, rgba(125, 32, 35, 0.16), transparent 24rem),
+    linear-gradient(180deg, var(--ink), #050a08 68%, var(--ink));
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  touch-action: manipulation;
 }
 
-/* Global Grain Filter Overlay */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.04;
   pointer-events: none;
   z-index: 9999;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(115deg, transparent 0 46%, rgba(255,255,255,0.035) 48%, transparent 52%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+  mix-blend-mode: screen;
 }
-
-::selection { background: var(--brass); color: var(--ink); }
-
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--paper); }
-::-webkit-scrollbar-thumb { background: var(--ink-soft); border-radius: 0; }
-::-webkit-scrollbar-thumb:hover { background: var(--brass); }
 
 body.menu-open { overflow: hidden; }
 
 main { flex: 1 0 auto; position: relative; z-index: 1; }
 
+img, svg { display: block; max-width: 100%; height: auto; }
+
+button,
+input,
+textarea,
+select { font: inherit; }
+
+button,
+a { -webkit-tap-highlight-color: rgba(200, 149, 63, 0.18); }
+
+::selection { background: var(--brass); color: var(--ink); }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--brass-deep); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--brass); }
+
+h1, h2, h3, h4, p { margin-top: 0; }
+
 h1, h2 {
   font-family: var(--font-display);
   font-weight: 400;
-  line-height: 0.9;
-  letter-spacing: 0.005em;
+  line-height: 0.88;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  margin: 0 0 var(--s-4);
-  color: var(--ink);
+  text-wrap: balance;
 }
-h1 { font-size: clamp(3rem, 11vw, 8.5rem); line-height: 0.86; }
-h2 { font-size: clamp(2.1rem, 5.5vw, 4.5rem); }
-h3, h4 {
-  font-family: var(--font-body);
-  font-weight: 700;
-  line-height: 1.2;
+
+h1 { font-size: var(--text-hero); margin-bottom: var(--s-4); }
+h2 { font-size: var(--text-3xl); margin-bottom: var(--s-4); }
+
+h3 {
+  font-size: var(--text-xl);
+  line-height: 1.15;
   letter-spacing: -0.01em;
-  margin: 0 0 var(--s-4);
-  color: var(--ink);
+  margin-bottom: var(--s-3);
+  text-wrap: balance;
 }
-h3 { font-size: clamp(1.1rem, 1.5vw, 1.3rem); }
 
-p { margin: 0 0 var(--s-5); opacity: 0.9; }
-
-/* Eyebrow — gold micro-label with a leading rule (design signature). */
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-3);
-  margin: 0 0 var(--s-4);
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--brass);
+p {
+  color: var(--text-soft);
+  margin-bottom: var(--s-4);
+  text-wrap: pretty;
 }
-.eyebrow::before {
-  content: "";
-  width: 28px;
-  height: 1px;
-  background: var(--brass);
-  flex-shrink: 0;
-}
-.eyebrow--bare::before { display: none; }
 
-small { color: var(--ink-soft); font-size: 0.85rem; opacity: 0.8; }
+small { font-size: var(--text-sm); color: inherit; }
 
 a {
-  color: var(--ink);
+  color: inherit;
   text-decoration: none;
-  background-image: linear-gradient(var(--brass), var(--brass));
-  background-position: 0% 100%;
-  background-repeat: no-repeat;
-  background-size: 0% 1px;
-  transition: background-size 0.4s var(--ease-out-expo), color 0.4s var(--ease-out-expo);
-}
-a:hover {
-  background-size: 100% 1px;
-  color: var(--brass);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
 }
 
-/* Utility Classes */
-.u-clean { text-decoration: none; color: inherit; background: none !important; }
-.u-brass { color: var(--brass) !important; }
-.u-paper { color: var(--paper) !important; }
-.u-ink   { color: var(--ink) !important; }
-.u-weight-400 { font-weight: 400; }
-.u-weight-500 { font-weight: 500; }
-.u-weight-600 { font-weight: 600; }
-.u-weight-700 { font-weight: 700; }
-.u-opacity-80 { opacity: 0.8; }
-.u-opacity-60 { opacity: 0.6; }
-.u-opacity-50 { opacity: 0.5; }
-.u-list-clean { list-style: none; padding: 0; margin: 0; }
-.u-font-display { font-family: var(--font-display); }
-.u-italic { font-style: italic; }
-.tnum { font-variant-numeric: tabular-nums; }
+a:hover { color: var(--brass-2); }
 
-img, svg { display: block; max-width: 100%; height: auto; }
+[id] { scroll-margin-top: calc(var(--header-total) + 18px); }
 
-/* ------------------------------------------------------------------------
-   Reveal on scroll — elements glide up as they enter the viewport.
-   app.js adds .js to <html> and .in to each .reveal via
-   IntersectionObserver; without JS nothing is ever hidden.
-   ------------------------------------------------------------------------ */
-.js .reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
-}
-.js .reveal.in { opacity: 1; transform: none; }
-.js .reveal.d1 { transition-delay: 0.08s; }
-.js .reveal.d2 { transition-delay: 0.16s; }
-.js .reveal.d3 { transition-delay: 0.24s; }
-
-/* ------------------------------------------------------------------------
-   Focus styles — visible on both paper and ink backgrounds
-   ------------------------------------------------------------------------ */
 :focus-visible {
-  outline: 2px solid var(--brass);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-.section--contrast :focus-visible,
-.site-footer :focus-visible,
-.mobile-menu :focus-visible,
-.hero :focus-visible,
-.receipt :focus-visible {
-  outline-color: var(--brass-hi);
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--paper) 35%, transparent);
+  outline: 2px solid var(--brass-2);
+  outline-offset: 4px;
+  border-radius: var(--radius-xs);
 }
 
-/* ------------------------------------------------------------------------
-   Skip link — visually hidden until focused via Tab
-   ------------------------------------------------------------------------ */
 .skip-link {
   position: absolute;
   top: var(--s-3);
   left: var(--s-3);
-  z-index: 100;
+  z-index: 2000;
   padding: var(--s-3) var(--s-4);
-  background: var(--ink);
-  color: var(--paper);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-radius: var(--radius-sm);
-  transform: translateY(-200%);
-  transition: transform 180ms var(--ease-out-expo);
-}
-.skip-link:focus {
-  transform: translateY(0);
-  outline: 2px solid var(--brass);
-  outline-offset: 2px;
-  color: var(--paper);
+  background: var(--brass);
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: translateY(-180%);
+  transition: transform 180ms var(--ease-soft);
 }
 
-/* ------------------------------------------------------------------------
-   Reduced motion — respect user preference across the whole app
-   ------------------------------------------------------------------------ */
+.skip-link:focus { transform: translateY(0); }
+
+.eyebrow,
+.micro-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  color: var(--brass-2);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  margin: 0 0 var(--s-3);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 32px;
+  height: 1px;
+  background: currentColor;
+}
+
+.eyebrow--bare::before { display: none; }
+
+.u-clean { color: inherit; text-decoration: none; }
+.u-clean:hover { color: inherit; }
+.u-muted { color: var(--text-faint); }
+.u-brass { color: var(--brass-2); }
+.u-paper { color: var(--paper); }
+.tnum { font-variant-numeric: tabular-nums; }
+
+.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s var(--ease-out-expo), transform 0.65s var(--ease-out-expo);
+}
+
+.js .reveal.in { opacity: 1; transform: none; }
+.js .reveal.d1 { transition-delay: 0.08s; }
+.js .reveal.d2 { transition-delay: 0.16s; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
   .js .reveal { opacity: 1; transform: none; }
-  /* Disable the fragment-swap opacity dim for reduced-motion users —
-     the content still updates, just without the fade in/out.           */
-  .time-grid.is-swapping { opacity: 1 !important; }
 }

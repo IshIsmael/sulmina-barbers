@@ -5,11 +5,12 @@
   "description": "Sulmina Barber Shop — booking website",
   "type": "commonjs",
   "engines": {
-    "node": ">=22"
+    "node": ">=22 <25"
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "node --env-file=.env --watch server.js"
+    "dev": "node --env-file=.env --watch server.js",
+    "preview": "set PREVIEW_NO_DB=true&& node --watch --env-file-if-exists=.env server.js"
   },
   "dependencies": {
     "ejs": "^5.0.2",

@@ -3,7 +3,7 @@
 const express = require('express');
 const { ObjectId } = require('mongodb');
 
-const { getBySlug, groupByCategory } = require('../data/services');
+const { getBySlug } = require('../data/services');
 const {
   SHOP, BARBERS, BARBER_COUNT, OPENING_HOURS,
   SLOT_GRANULARITY_MINUTES, BOOKING_LOOKAHEAD_DAYS,
@@ -170,26 +170,18 @@ async function computeTimeView(req) {
     slotsForFilter = entry ? entry.startTimes.slice() : [];
   }
 
-  const availableSet = new Set(slotsForFilter.map(d => d.getTime()));
-
-  let decorated = [];
-  if (barberFilter === 'any') {
-    decorated = slotsForFilter.map(d => ({
-      iso: d.toISOString(), label: shopTime(d), status: 'free', date: d
-    }));
-  } else {
-    const all = Array.from(anyStartsMs).sort((a, b) => a - b);
-    decorated = all.map(ms => {
-      const d = new Date(ms);
-      return {
-        iso: d.toISOString(), label: shopTime(d),
-        status: availableSet.has(ms) ? 'free' : 'busy',
-        date: d
-      };
-    });
-  }
+  const decorated = slotsForFilter.map(d => ({
+    iso: d.toISOString(), label: shopTime(d), status: 'free', date: d
+  }));
 
   const groups = groupSlotsByDaypart(decorated);
+  const selectedSlotIso = typeof req.query.slot === 'string'
+    && decorated.some(s => s.status === 'free' && s.iso === req.query.slot)
+    ? req.query.slot
+    : null;
+  const selectedSlot = selectedSlotIso
+    ? decorated.find(s => s.iso === selectedSlotIso)
+    : null;
 
   const barberTabs = [
     { value: 'any', label: 'Any', isActive: barberFilter === 'any' },
@@ -215,50 +207,61 @@ async function computeTimeView(req) {
     totalSlotCount,
     nextOpen,
     barberTabs, barberFilter,
-    barberFilterParam: barberFilter === 'any' ? 'any' : String(barberFilter)
+    barberFilterParam: barberFilter === 'any' ? 'any' : String(barberFilter),
+    barberLabel: barberLabelFor(barberFilter === 'any' ? 'any' : String(barberFilter)),
+    selectedSlotIso,
+    selectedSlotLabel: selectedSlot ? selectedSlot.label : null,
+    selectedSlotDateLong: selectedSlot ? shopDateLong(selectedSlot.date) : null
   };
 }
 
 // ---- Step 1 · service ------------------------------------------------------
-router.get('/', (req, res) => {
-  if (typeof req.query.service === 'string') {
-    const svc = getBySlug(req.query.service);
-    if (svc) return res.redirect(`/book/barber?service=${encodeURIComponent(svc.slug)}`);
-  }
-  const meta = pageMeta('book');
-  res.render('booking/select-service', {
-    title: meta.title, meta, groups: groupByCategory(), step: step(1)
-  });
-});
-
-// ---- Step 2 · barber -------------------------------------------------------
-router.get('/barber', (req, res) => {
-  const service = getBySlug(req.query.service);
-  if (!service) return res.redirect('/book');
-  const meta = pageMeta('book', { title: 'Choose your barber · Sulmina', noindex: true });
-  res.render('booking/select-barber', {
-    title: meta.title, meta,
-    service, barbers: BARBERS, step: step(2)
-  });
-});
-
-// ---- Step 3 · time ---------------------------------------------------------
-router.get('/time', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const view = await computeTimeView(req);
-    if (!view) return res.redirect('/book');
-    const meta = pageMeta('book', {
-      title: `Pick a time — ${view.service.name} · Sulmina`,
-      description: `Book a ${view.service.name.toLowerCase()} at Sulmina Barber Shop, Southgate N14.`,
-      noindex: true
-    });
-    res.render('booking/select-time', {
+    if (!view) return res.redirect('/services');
+    const meta = pageMeta('book');
+    res.render('booking/select-service', {
       title: meta.title, meta,
-      step: step(3), ...view
+      barbers: BARBERS,
+      step: step(view.selectedSlotIso ? 4 : 1),
+      form: { name: '', email: '', phone: '', notes: '' },
+      errors: null,
+      bookingBasePath: '/book',
+      ...view
     });
   } catch (err) { next(err); }
 });
 
+router.get('/slots', async (req, res, next) => {
+  try {
+    const view = await computeTimeView(req);
+    if (!view) return res.status(404).send('');
+    res.render('booking/_time-grid', { step: step(3), bookingBasePath: '/book', ...view });
+  } catch (err) { next(err); }
+});
+
+router.get('/barber', (req, res) => {
+  const service = getBySlug(req.query.service);
+  if (!service) return res.redirect('/services');
+  res.redirect(`/book?service=${encodeURIComponent(service.slug)}`);
+});
+
+router.get('/time', async (req, res, next) => {
+  try {
+    const view = await computeTimeView(req);
+    if (!view) return res.redirect('/services');
+    const query = new URLSearchParams({
+      service: view.service.slug,
+      barber: view.barberFilterParam,
+      date: view.dateKey,
+      weekStart: view.weekStart
+    });
+    res.redirect(`/book?${query.toString()}`);
+  } catch (err) { next(err); }
+});
+
+// ---- Legacy fragment/details routes ---------------------------------------
 router.get('/time/slots', async (req, res, next) => {
   try {
     const view = await computeTimeView(req);
@@ -270,10 +273,10 @@ router.get('/time/slots', async (req, res, next) => {
 router.get('/details', (req, res) => {
   const service = getBySlug(req.query.service);
   const slotIso = typeof req.query.slot === 'string' ? req.query.slot : null;
-  if (!service || !slotIso) return res.redirect('/book');
+  if (!service || !slotIso) return res.redirect('/services');
 
   const slotDate = new Date(slotIso);
-  if (Number.isNaN(slotDate.getTime())) return res.redirect('/book');
+  if (Number.isNaN(slotDate.getTime())) return res.redirect('/services');
 
   const barberFilter = parseBarberFilter(req.query.barber);
   const barberChosen = barberFilter === 'any' ? 'any' : String(barberFilter);
@@ -294,10 +297,10 @@ router.post('/confirm', async (req, res, next) => {
   try {
     const { service: slug, slot: slotIso } = req.body;
     const service = getBySlug(slug);
-    if (!service || typeof slotIso !== 'string') return res.redirect('/book');
+    if (!service || typeof slotIso !== 'string') return res.redirect('/services');
 
     const slotDate = new Date(slotIso);
-    if (Number.isNaN(slotDate.getTime())) return res.redirect('/book');
+    if (Number.isNaN(slotDate.getTime())) return res.redirect('/services');
 
     const barberFilter = parseBarberFilter(req.body.barber);
 
@@ -315,16 +318,26 @@ router.post('/confirm', async (req, res, next) => {
     if (!form.phone) errors.phone = 'A contact number is required.';
 
     if (Object.keys(errors).length) {
-      const meta = pageMeta('book', { title: 'Your details · Sulmina', noindex: true });
-      const barberChosen = barberFilter === 'any' ? 'any' : String(barberFilter);
-      return res.status(400).render('booking/details', {
-        title: meta.title, meta,
-        service, slotIso,
-        barberChosen,
-        barberLabel: barberLabelFor(barberChosen),
-        slotLabel: shopTime(slotDate),
-        slotDateLong: shopDateLong(slotDate),
-        step: step(4), errors, form
+      const bookingView = await computeTimeView({
+        query: {
+          service: service.slug,
+          barber: barberFilter === 'any' ? 'any' : String(barberFilter),
+          date: shopDateKey(slotDate),
+          weekStart: shopDateKey(slotDate),
+          slot: slotIso
+        }
+      });
+      if (!bookingView) return res.redirect('/services');
+      const bookingMeta = pageMeta('book');
+      return res.status(400).render('booking/select-service', {
+        title: bookingMeta.title,
+        meta: bookingMeta,
+        barbers: BARBERS,
+        step: step(4),
+        form,
+        errors,
+        bookingBasePath: '/book',
+        ...bookingView
       });
     }
 
@@ -379,7 +392,7 @@ router.post('/confirm', async (req, res, next) => {
 
 router.get('/conflict', (req, res) => {
   const service = getBySlug(req.query.service);
-  if (!service) return res.redirect('/book');
+  if (!service) return res.redirect('/services');
   const barber = typeof req.query.barber === 'string' ? req.query.barber : 'any';
   const meta = pageMeta('book', { title: 'Slot taken · Sulmina', noindex: true });
   res.render('booking/conflict', {
@@ -394,9 +407,9 @@ router.get('/conflict', (req, res) => {
 router.get('/confirmed/:id', async (req, res, next) => {
   try {
     const id = req.params.id;
-    if (!ObjectId.isValid(id)) return res.redirect('/book');
+    if (!ObjectId.isValid(id)) return res.redirect('/services');
     const booking = await getDb().collection('bookings').findOne({ _id: new ObjectId(id) });
-    if (!booking) return res.redirect('/book');
+    if (!booking) return res.redirect('/services');
 
     const barber = getBarberById(booking.barberId);
     const meta = pageMeta('book', { title: 'Booked · Sulmina', noindex: true });
@@ -405,7 +418,8 @@ router.get('/confirmed/:id', async (req, res, next) => {
       booking,
       barberName: barber ? barber.name : `Barber ${booking.barberId}`,
       slotLabel: shopTime(booking.startAt),
-      slotDateLong: shopDateLong(booking.startAt)
+      slotDateLong: shopDateLong(booking.startAt),
+      emailConfigured: email.isConfigured()
     });
   } catch (err) { next(err); }
 });

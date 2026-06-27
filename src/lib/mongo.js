@@ -9,7 +9,7 @@
  * there is no silent fallback.
  */
 
-const { MongoClient } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 let client = null;
 let db = null;
@@ -24,7 +24,13 @@ async function connect() {
     );
   }
 
-  client = new MongoClient(uri);
+  client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true
+    }
+  });
   await client.connect();
 
   db = client.db();

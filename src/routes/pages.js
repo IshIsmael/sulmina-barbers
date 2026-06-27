@@ -3,7 +3,12 @@
 const express = require('express');
 const { SERVICES, groupByCategory } = require('../data/services');
 const { OPENING_HOURS, HOURS_DISPLAY, SHOP } = require('../config/shop');
-const { pageMeta, buildLocalBusinessJsonLd, siteUrl } = require('../lib/seo');
+const {
+  pageMeta,
+  buildLocalBusinessJsonLd,
+  buildServiceListJsonLd,
+  siteUrl
+} = require('../lib/seo');
 const { listImages } = require('../lib/gallery');
 
 const router = express.Router();
@@ -40,7 +45,7 @@ router.get('/', (req, res) => {
   res.render('home', {
     title: meta.title,
     meta,
-    jsonLd: buildLocalBusinessJsonLd(),
+    jsonLd: [buildLocalBusinessJsonLd(), buildServiceListJsonLd()],
     loadElfsight: true,
     highlights, todayHours, todayLabel
   });
@@ -51,6 +56,7 @@ router.get('/services', (req, res) => {
   res.render('services', {
     title: meta.title,
     meta,
+    jsonLd: buildServiceListJsonLd(),
     groups: groupByCategory()
   });
 });
@@ -98,8 +104,7 @@ router.get('/sitemap.xml', (req, res) => {
     { loc: '/services', changefreq: 'monthly', priority: '0.9' },
     { loc: '/about',    changefreq: 'yearly',  priority: '0.6' },
     { loc: '/gallery',  changefreq: 'monthly', priority: '0.6' },
-    { loc: '/contact',  changefreq: 'yearly',  priority: '0.8' },
-    { loc: '/book',     changefreq: 'weekly',  priority: '0.9' }
+    { loc: '/contact',  changefreq: 'yearly',  priority: '0.8' }
   ];
   const urls = pages.map(p => `  <url>
     <loc>${base}${p.loc}</loc>

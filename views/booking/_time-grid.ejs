@@ -1,32 +1,40 @@
+<% const gridBasePath = typeof bookingBasePath !== 'undefined' ? bookingBasePath : '/book/time'; %>
+<% const renderBarberTabs = typeof showBarberTabs === 'undefined' || showBarberTabs; %>
+<% const activeSlotIso = typeof selectedSlotIso !== 'undefined' ? selectedSlotIso : null; %>
 <div class="time-grid"
      data-service="<%= service.slug %>"
      data-barber="<%= barberFilterParam %>"
      data-date="<%= dateKey %>"
-     data-week-start="<%= weekStart %>">
+     data-week-start="<%= weekStart %>"
+     data-date-long="<%= dateLong %>"
+     data-barber-label="<%= typeof barberLabel !== 'undefined' ? barberLabel : 'Any available' %>"
+     data-selected-slot-iso="<%= activeSlotIso || '' %>"
+     data-selected-slot-label="<%= typeof selectedSlotLabel !== 'undefined' && selectedSlotLabel ? selectedSlotLabel : '' %>"
+     data-selected-slot-date-long="<%= typeof selectedSlotDateLong !== 'undefined' && selectedSlotDateLong ? selectedSlotDateLong : '' %>">
 
-  <!-- Barber picker (horizontal scroll) -->
-  <nav class="barber-strip" aria-label="Choose a barber">
-    <div class="barber-strip__inner" role="tablist" aria-label="Barbers">
-      <% barberTabs.forEach(function(tab){ %>
-        <a class="barber-tab <%= tab.isActive ? 'is-active' : '' %>"
-           role="tab"
-           data-tg-swap
-           data-tg-query="barber=<%= tab.value %>"
-           href="/book/time?service=<%= service.slug %>&date=<%= dateKey %>&weekStart=<%= weekStart %>&barber=<%= tab.value %>"
-           aria-selected="<%= tab.isActive ? 'true' : 'false' %>">
-          <%= tab.label %>
-        </a>
-      <% }); %>
-    </div>
-  </nav>
+  <% if (renderBarberTabs) { %>
+    <nav class="barber-strip" aria-label="Choose a barber">
+      <div class="barber-strip__inner" role="tablist" aria-label="Barbers">
+        <% barberTabs.forEach(function(tab){ %>
+          <a class="barber-tab <%= tab.isActive ? 'is-active' : '' %>"
+             role="tab"
+             data-tg-swap
+             data-tg-query="barber=<%= tab.value %>"
+             href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>&amp;barber=<%= tab.value %>"
+             aria-selected="<%= tab.isActive ? 'true' : 'false' %>">
+            <%= tab.label %>
+          </a>
+        <% }); %>
+      </div>
+    </nav>
+  <% } %>
 
-  <!-- Week nav bar — chevrons + week range title -->
   <div class="week-nav" role="group" aria-label="Week navigation">
     <% if (prevWeekStart) { %>
       <a class="week-nav__btn"
          data-tg-swap
          data-tg-query="weekStart=<%= prevWeekStart %>"
-         href="/book/time?service=<%= service.slug %>&date=<%= dateKey %>&weekStart=<%= prevWeekStart %>&barber=<%= barberFilterParam %>"
+         href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= prevWeekStart %>&amp;weekStart=<%= prevWeekStart %>&amp;barber=<%= barberFilterParam %>"
          aria-label="Previous week">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -48,7 +56,7 @@
       <a class="week-nav__btn"
          data-tg-swap
          data-tg-query="weekStart=<%= nextWeekStart %>"
-         href="/book/time?service=<%= service.slug %>&date=<%= dateKey %>&weekStart=<%= nextWeekStart %>&barber=<%= barberFilterParam %>"
+         href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= nextWeekStart %>&amp;weekStart=<%= nextWeekStart %>&amp;barber=<%= barberFilterParam %>"
          aria-label="Next week">
         <span class="week-nav__btn-label">Next</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -65,21 +73,21 @@
     <% } %>
   </div>
 
-  <!-- Date strip -->
-  <nav class="date-strip" aria-label="Choose a date">
-    <% strip.forEach(function(d){ %>
-      <a class="date-pill <%= d.isSelected ? 'is-selected' : '' %> <%= d.isToday ? 'is-today' : '' %>"
-         data-tg-swap
-         data-tg-query="date=<%= d.key %>"
-         href="/book/time?service=<%= service.slug %>&date=<%= d.key %>&weekStart=<%= weekStart %>&barber=<%= barberFilterParam %>"
-         aria-current="<%= d.isSelected ? 'date' : 'false' %>">
-        <span class="date-pill__weekday"><%= d.weekday %></span>
-        <span class="date-pill__day"><%= d.day %></span>
-      </a>
-    <% }); %>
-  </nav>
+  <div class="date-strip-wrap">
+    <nav class="date-strip" aria-label="Choose a date">
+      <% strip.forEach(function(d){ %>
+        <a class="date-pill <%= d.isSelected ? 'is-selected' : '' %> <%= d.isToday ? 'is-today' : '' %>"
+           data-tg-swap
+           data-tg-query="date=<%= d.key %>"
+           href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= d.key %>&amp;weekStart=<%= weekStart %>&amp;barber=<%= barberFilterParam %>"
+           aria-current="<%= d.isSelected ? 'date' : 'false' %>">
+          <span class="date-pill__weekday"><%= d.weekday %></span>
+          <span class="date-pill__day"><%= d.day %></span>
+        </a>
+      <% }); %>
+    </nav>
+  </div>
 
-  <!-- Slot groups — aria-live for fragment-swap announcements -->
   <div class="slots-region" aria-live="polite" aria-busy="false">
     <h2 class="slots-head" tabindex="-1"><%= dateLong %></h2>
 
@@ -93,7 +101,7 @@
             <a class="link-arrow link-arrow--inline"
                data-tg-swap
                data-tg-query="barber=any"
-               href="/book/time?service=<%= service.slug %>&date=<%= dateKey %>&weekStart=<%= weekStart %>&barber=any">any barber</a>
+               href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>&amp;barber=any">any barber</a>
             or pick another day.
           <% } else { %>
             All three barbers are fully booked on <%= dateLong %>.
@@ -104,8 +112,8 @@
           <a class="btn btn--primary slots-empty__jump"
              data-tg-swap
              data-tg-query="date=<%= nextOpen.key %>&weekStart=<%= nextOpen.key %>"
-             href="/book/time?service=<%= service.slug %>&date=<%= nextOpen.key %>&weekStart=<%= nextOpen.key %>&barber=<%= barberFilterParam %>">
-            Jump to <%= nextOpen.label %> <span aria-hidden="true">→</span>
+             href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= nextOpen.key %>&amp;weekStart=<%= nextOpen.key %>&amp;barber=<%= barberFilterParam %>">
+            Jump to <%= nextOpen.label %> <span aria-hidden="true">&rarr;</span>
           </a>
         <% } %>
       </div>
@@ -116,15 +124,11 @@
           <div class="slot-grid" role="list">
             <% group.items.forEach(function(s){ %>
               <% if (s.status === 'free') { %>
-                <a class="slot" role="listitem"
-                   href="/book/details?service=<%= service.slug %>&slot=<%= encodeURIComponent(s.iso) %>&barber=<%= barberFilterParam %>">
+                <a class="slot <%= activeSlotIso === s.iso ? 'is-selected' : '' %>" role="listitem"
+                   href="/book?service=<%= service.slug %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>&amp;barber=<%= barberFilterParam %>&amp;slot=<%= encodeURIComponent(s.iso) %>"
+                   aria-current="<%= activeSlotIso === s.iso ? 'time' : 'false' %>">
                   <%= s.label %>
                 </a>
-              <% } else { %>
-                <span class="slot is-busy" role="listitem" aria-disabled="true" title="Barber is busy at this time — try 'Any' to see if another barber is free">
-                  <%= s.label %>
-                  <small class="slot__busy">Busy</small>
-                </span>
               <% } %>
             <% }); %>
           </div>

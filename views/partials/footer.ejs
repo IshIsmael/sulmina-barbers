@@ -3,12 +3,15 @@
     <div class="site-footer__grid">
 
       <div class="site-footer__brand">
-        <a href="/" class="brand u-clean" aria-label="Sulmina Barbershop — home">
-          <img class="site-footer__logo" src="/img/logo.png"
-               alt="Sulmina Barbershop" width="694" height="118" loading="lazy" decoding="async">
+        <a href="/" class="brand u-clean" aria-label="Sulmina Barber Shop home">
+          <%- include('logo') %>
+          <span class="brand__text">
+            <span class="brand__name">Sulmina</span>
+            <span class="brand__sub">Barber Shop</span>
+          </span>
         </a>
         <p class="site-footer__tagline">
-          Haircuts, fades and beard work at 43 High Street, Southgate.
+          Haircuts, skin fades and beard work at 43 High Street, Southgate N14.
         </p>
       </div>
 
@@ -18,7 +21,7 @@
         <a href="/about">About</a>
         <a href="/gallery">Gallery</a>
         <a href="/contact">Contact</a>
-        <a href="/book">Book a chair</a>
+        <a href="/services">Book a chair</a>
       </nav>
 
       <div>
@@ -35,15 +38,15 @@
 
       <div class="site-footer__social">
         <p class="site-footer__head">Visit</p>
-        <p style="margin: 0 0 var(--s-3); color: color-mix(in oklab, var(--paper) 75%, transparent); font-size: 0.95rem;">
+        <p style="margin: 0 0 var(--s-3); color: var(--text-soft); font-size: 0.95rem;">
           43 High Street<br>London N14 6LD
         </p>
         <p style="margin: 0 0 var(--s-3);">
-          <a class="u-clean" href="<%= shop.phoneHref %>" style="font-weight: 600;"><%= shop.phone %></a>
+          <a class="u-clean" href="<%= shop.phoneHref %>" style="font-weight: 800;"><%= shop.phone %></a>
         </p>
         <p style="margin: 0;">
           <a class="link-arrow" href="<%= shop.instagram %>" rel="noopener">
-            @sulmina_barbershop <span aria-hidden="true">→</span>
+            @sulmina_barbershop <span aria-hidden="true">&rarr;</span>
           </a>
         </p>
       </div>
@@ -51,13 +54,11 @@
     </div>
   </div>
 
-  <p class="site-footer__giant" aria-hidden="true">Sulmina</p>
-
   <div class="site-footer__bottom">
     <div class="container">
       <div class="site-footer__legal">
-        <span>© <%= new Date().getFullYear() %> <%= shop.name %></span>
-        <span class="u-hide-mobile">·</span>
+        <span>&copy; <%= new Date().getFullYear() %> <%= shop.name %></span>
+        <span class="u-hide-mobile">&middot;</span>
         <span>43 High Street, London N14 6LD</span>
       </div>
     </div>

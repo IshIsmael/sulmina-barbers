@@ -68,7 +68,7 @@ const SERVICES = Object.freeze([
     name: 'Taper Fade',
     price: 17,
     durationMinutes: 25,
-    category: 'other',
+    category: 'haircuts',
     description: 'A softer fade around the temples and neckline while keeping length on top.'
   },
   {
@@ -76,7 +76,7 @@ const SERVICES = Object.freeze([
     name: 'Skin Fade',
     price: 18,
     durationMinutes: 30,
-    category: 'other',
+    category: 'haircuts',
     description: 'A high, mid or low fade taken cleanly down to the skin.'
   },
   {
@@ -123,7 +123,7 @@ const SERVICES = Object.freeze([
 
 const CATEGORIES = Object.freeze([
   { id: 'signature', label: 'Signature' },
-  { id: 'haircuts',  label: 'Haircuts' },
+  { id: 'haircuts',  label: 'Hair cuts' },
   { id: 'beard',     label: 'Beard' },
   { id: 'other',     label: 'Other' }
 ]);
