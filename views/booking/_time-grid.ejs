@@ -20,7 +20,7 @@
              role="tab"
              data-tg-swap
              data-tg-query="barber=<%= tab.value %>"
-             href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>&amp;barber=<%= tab.value %>"
+             href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>&amp;barber=<%= tab.value %>#booking-time"
              aria-selected="<%= tab.isActive ? 'true' : 'false' %>">
             <%= tab.label %>
           </a>
@@ -34,7 +34,7 @@
       <a class="week-nav__btn"
          data-tg-swap
          data-tg-query="weekStart=<%= prevWeekStart %>"
-         href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= prevWeekStart %>&amp;weekStart=<%= prevWeekStart %>&amp;barber=<%= barberFilterParam %>"
+         href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= prevWeekStart %>&amp;weekStart=<%= prevWeekStart %>&amp;barber=<%= barberFilterParam %>#booking-time"
          aria-label="Previous week">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -56,7 +56,7 @@
       <a class="week-nav__btn"
          data-tg-swap
          data-tg-query="weekStart=<%= nextWeekStart %>"
-         href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= nextWeekStart %>&amp;weekStart=<%= nextWeekStart %>&amp;barber=<%= barberFilterParam %>"
+         href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= nextWeekStart %>&amp;weekStart=<%= nextWeekStart %>&amp;barber=<%= barberFilterParam %>#booking-time"
          aria-label="Next week">
         <span class="week-nav__btn-label">Next</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -79,7 +79,7 @@
         <a class="date-pill <%= d.isSelected ? 'is-selected' : '' %> <%= d.isToday ? 'is-today' : '' %>"
            data-tg-swap
            data-tg-query="date=<%= d.key %>"
-           href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= d.key %>&amp;weekStart=<%= weekStart %>&amp;barber=<%= barberFilterParam %>"
+           href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= d.key %>&amp;weekStart=<%= weekStart %>&amp;barber=<%= barberFilterParam %>#booking-time"
            aria-current="<%= d.isSelected ? 'date' : 'false' %>">
           <span class="date-pill__weekday"><%= d.weekday %></span>
           <span class="date-pill__day"><%= d.day %></span>
@@ -101,7 +101,7 @@
             <a class="link-arrow link-arrow--inline"
                data-tg-swap
                data-tg-query="barber=any"
-               href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>&amp;barber=any">any barber</a>
+               href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>&amp;barber=any#booking-time">any barber</a>
             or pick another day.
           <% } else { %>
             All three barbers are fully booked on <%= dateLong %>.
@@ -112,7 +112,7 @@
           <a class="btn btn--primary slots-empty__jump"
              data-tg-swap
              data-tg-query="date=<%= nextOpen.key %>&weekStart=<%= nextOpen.key %>"
-             href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= nextOpen.key %>&amp;weekStart=<%= nextOpen.key %>&amp;barber=<%= barberFilterParam %>">
+             href="<%= gridBasePath %>?service=<%= service.slug %>&amp;date=<%= nextOpen.key %>&amp;weekStart=<%= nextOpen.key %>&amp;barber=<%= barberFilterParam %>#booking-time">
             Jump to <%= nextOpen.label %> <span aria-hidden="true">&rarr;</span>
           </a>
         <% } %>
@@ -125,7 +125,8 @@
             <% group.items.forEach(function(s){ %>
               <% if (s.status === 'free') { %>
                 <a class="slot <%= activeSlotIso === s.iso ? 'is-selected' : '' %>" role="listitem"
-                   href="/book?service=<%= service.slug %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>&amp;barber=<%= barberFilterParam %>&amp;slot=<%= encodeURIComponent(s.iso) %>"
+                   data-tg-swap
+                   href="/book?service=<%= service.slug %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>&amp;barber=<%= barberFilterParam %>&amp;slot=<%= encodeURIComponent(s.iso) %>#booking-details"
                    aria-current="<%= activeSlotIso === s.iso ? 'time' : 'false' %>">
                   <%= s.label %>
                 </a>

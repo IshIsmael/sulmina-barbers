@@ -48,7 +48,7 @@
                data-tg-swap
                data-booking-barber-card
                data-barber-value="any"
-               href="/book?service=<%= service.slug %>&amp;barber=any&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>">
+               href="/book?service=<%= service.slug %>&amp;barber=any&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>#booking-time">
               <span class="booking-barber-card__avatar booking-barber-card__avatar--icon" aria-hidden="true">Any</span>
               <span class="booking-barber-card__name">Any available</span>
               <span class="booking-barber-card__role">Fastest option</span>
@@ -60,7 +60,7 @@
                  data-tg-swap
                  data-booking-barber-card
                  data-barber-value="<%= b.id %>"
-                 href="/book?service=<%= service.slug %>&amp;barber=<%= b.id %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>">
+                 href="/book?service=<%= service.slug %>&amp;barber=<%= b.id %>&amp;date=<%= dateKey %>&amp;weekStart=<%= weekStart %>#booking-time">
                 <span class="booking-barber-card__avatar" aria-hidden="true">
                   <img src="/images/gallery/0<%= (i % 3) + 2 %>.jpg" alt="" loading="lazy" decoding="async">
                 </span>
@@ -71,7 +71,7 @@
           </div>
         </section>
 
-        <section class="booking-section booking-section--date" aria-labelledby="booking-date-title">
+        <section class="booking-section booking-section--date" id="booking-time" aria-labelledby="booking-date-title">
           <div class="booking-section__head">
             <p class="booking-section__label">Pick a date</p>
             <h2 id="booking-date-title"><%= weekRangeLabel %></h2>
@@ -95,7 +95,7 @@
         </section>
       </div>
 
-      <aside class="booking-section booking-section--details booking-studio__summary" aria-labelledby="booking-details-title">
+      <aside class="booking-section booking-section--details booking-studio__summary" id="booking-details" data-booking-details aria-labelledby="booking-details-title">
         <div class="booking-ticket">
           <p class="booking-section__label">Booking summary</p>
           <h2 id="booking-details-title"><%= activeSlotIso ? 'Ready to confirm.' : 'Choose a time.' %></h2>

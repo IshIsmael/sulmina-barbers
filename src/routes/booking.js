@@ -237,7 +237,12 @@ router.get('/slots', async (req, res, next) => {
   try {
     const view = await computeTimeView(req);
     if (!view) return res.status(404).send('');
-    res.render('booking/_time-grid', { step: step(3), bookingBasePath: '/book', ...view });
+    res.render('booking/_time-grid', {
+      step: step(3),
+      bookingBasePath: '/book',
+      showBarberTabs: false,
+      ...view
+    });
   } catch (err) { next(err); }
 });
 

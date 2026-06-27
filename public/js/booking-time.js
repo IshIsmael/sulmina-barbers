@@ -58,7 +58,7 @@
 
       card.classList.toggle('is-selected', isSelected);
       card.setAttribute('aria-current', isSelected ? 'true' : 'false');
-      card.href = next.pathname + '?' + next.searchParams.toString();
+      card.href = next.pathname + '?' + next.searchParams.toString() + '#booking-time';
     });
 
     const barberInput = page.querySelector('[data-booking-barber-input]');
@@ -82,6 +82,7 @@
     const navUrl = new URL(anchor.href, window.location.origin);
     const fragUrl = toFragmentUrl(anchor.href);
     const clickedInsideGrid = Boolean(anchor.closest(ROOT_SELECTOR));
+    const clickedSlot = anchor.classList.contains('slot');
 
     const current = document.querySelector(ROOT_SELECTOR);
     if (!current) { window.location.href = navUrl.toString(); return; }
@@ -107,9 +108,15 @@
       // Update the browser URL (the user-facing /book/time one, not /slots).
       window.history.pushState({}, '', navUrl.toString());
 
-      // Move focus to the day heading for keyboard users.
+      // Move focus without changing scroll position.
       const heading = replacement.querySelector('.slots-head');
-      if (heading && clickedInsideGrid) heading.focus();
+      if (heading && clickedInsideGrid && !clickedSlot) {
+        try {
+          heading.focus({ preventScroll: true });
+        } catch (err) {
+          heading.focus();
+        }
+      }
 
       // Smooth-scroll the slot region into view on small screens if the
       // click happened from a date pill (fresh day means new grid).
